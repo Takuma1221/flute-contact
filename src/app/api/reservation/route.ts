@@ -165,6 +165,15 @@ async function saveToGoogleSheets(data: ReservationData): Promise<boolean> {
     return true;
   } catch (error) {
     console.error("Error saving to Google Sheets:", error);
+    if (error instanceof Error) {
+      console.error("Error message:", error.message);
+      console.error("Error stack:", error.stack);
+    }
+    // 環境変数をチェック
+    console.error("Environment check:");
+    console.error("GOOGLE_CLIENT_EMAIL exists:", !!process.env.GOOGLE_CLIENT_EMAIL);
+    console.error("GOOGLE_PRIVATE_KEY exists:", !!process.env.GOOGLE_PRIVATE_KEY);
+    console.error("GOOGLE_SPREADSHEET_ID exists:", !!process.env.GOOGLE_SPREADSHEET_ID);
     return false;
   }
 }
