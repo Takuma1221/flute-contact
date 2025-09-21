@@ -38,6 +38,7 @@ const handleLogin = (password: string) => {
 ```
 
 **学習ポイント:**
+
 - シンプルなパスワード認証の実装
 - セッション管理はなし（簡易実装）
 - 本格的なアプリでは JWT や NextAuth.js を推奨
@@ -49,11 +50,14 @@ const handleLogin = (password: string) => {
 const reservationSchema = z.object({
   name: z.string().min(1, "お名前を入力してください").max(50),
   email: z.string().email("正しいメールアドレスを入力してください"),
-  phone: z.string().regex(/^[\d\-\+\(\)\s]+$/, "正しい電話番号を入力してください"),
+  phone: z
+    .string()
+    .regex(/^[\d\-\+\(\)\s]+$/, "正しい電話番号を入力してください"),
 });
 ```
 
 **学習ポイント:**
+
 - Zodによる型安全なバリデーション
 - フロントエンドでの事前チェック
 - サーバーサイドでの再バリデーション
@@ -67,7 +71,7 @@ const reservationSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
-    
+
     // データ検証
     if (!data.name || !data.email) {
       return NextResponse.json(
@@ -78,9 +82,8 @@ export async function POST(request: NextRequest) {
 
     // 外部API呼び出し
     const result = await saveToGoogleSheets(data);
-    
+
     return NextResponse.json({ success: true });
-    
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
@@ -114,7 +117,6 @@ const onSubmit = async (data: ReservationData) => {
 
     setMessage("予約を受け付けました！");
     reset(); // フォームリセット
-    
   } catch (error) {
     setMessage(error instanceof Error ? error.message : "エラーが発生しました");
   } finally {
@@ -134,13 +136,13 @@ async function saveToGoogleSheets(data: ReservationData) {
     return true;
   } catch (error) {
     console.error("Google Sheets Error:", error);
-    
+
     if (error.code === 403) {
       console.error("権限エラー: サービスアカウントの設定を確認してください");
     } else if (error.code === 404) {
       console.error("スプレッドシートが見つかりません");
     }
-    
+
     return false;
   }
 }
@@ -159,7 +161,7 @@ async function sendConfirmationEmail(data: ReservationData) {
       subject: "予約確認メール",
       text: emailContent,
     });
-    
+
     return true;
   } catch (error) {
     console.error("Email Error:", error);
@@ -237,10 +239,7 @@ export async function POST(request: NextRequest) {
 
     // ... 処理続行
   } catch (error) {
-    return NextResponse.json(
-      { error: "サーバーエラー" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "サーバーエラー" }, { status: 500 });
   }
 }
 ```
@@ -249,22 +248,18 @@ export async function POST(request: NextRequest) {
 
 ```typescript
 // 電話番号の日本語対応バリデーション
-const phoneSchema = z.string()
-  .regex(
-    /^[\d\-\+\(\)\s]+$/, 
-    "数字、ハイフン、括弧のみ使用できます"
-  )
+const phoneSchema = z
+  .string()
+  .regex(/^[\d\-\+\(\)\s]+$/, "数字、ハイフン、括弧のみ使用できます")
   .refine(
     (val) => val.replace(/[\-\+\(\)\s]/g, "").length >= 10,
     "電話番号は10桁以上で入力してください"
   );
 
 // 日付の妥当性チェック
-const dateSchema = z.string()
-  .refine(
-    (val) => new Date(val) > new Date(),
-    "過去の日付は選択できません"
-  );
+const dateSchema = z
+  .string()
+  .refine((val) => new Date(val) > new Date(), "過去の日付は選択できません");
 ```
 
 ## 環境変数の管理
@@ -279,7 +274,7 @@ ADMIN_PASSWORD=dev_password
 
 # Vercel（本番環境）
 RESEND_API_KEY=re_prod_xxx...
-GOOGLE_SPREADSHEET_ID=prod_sheet_id  
+GOOGLE_SPREADSHEET_ID=prod_sheet_id
 ADMIN_PASSWORD=secure_prod_password
 ```
 
@@ -289,24 +284,24 @@ ADMIN_PASSWORD=secure_prod_password
 // 環境変数の存在チェック
 function validateEnvironment() {
   const required = [
-    'RESEND_API_KEY',
-    'GOOGLE_CLIENT_EMAIL',
-    'GOOGLE_PRIVATE_KEY',
-    'GOOGLE_SPREADSHEET_ID'
+    "RESEND_API_KEY",
+    "GOOGLE_CLIENT_EMAIL",
+    "GOOGLE_PRIVATE_KEY",
+    "GOOGLE_SPREADSHEET_ID",
   ];
 
-  const missing = required.filter(key => !process.env[key]);
-  
+  const missing = required.filter((key) => !process.env[key]);
+
   if (missing.length > 0) {
-    console.warn(`Missing environment variables: ${missing.join(', ')}`);
+    console.warn(`Missing environment variables: ${missing.join(", ")}`);
     return false;
   }
-  
+
   return true;
 }
 
 // アプリケーション起動時のチェック
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === "production") {
   validateEnvironment();
 }
 ```
@@ -364,7 +359,6 @@ export async function POST(request: NextRequest) {
         emailSent,
       },
     });
-
   } catch (error) {
     // 致命的エラーのみここで処理
     return NextResponse.json(
@@ -403,22 +397,22 @@ function getErrorMessage(error: unknown): string {
 ```typescript
 // 開発環境での詳細ログ
 function debugLog(message: string, data?: any) {
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.NODE_ENV === "development") {
     console.log(`[DEBUG] ${message}`, data);
   }
 }
 
 // 本番環境でのエラートラッキング
 function trackError(error: Error, context?: Record<string, any>) {
-  console.error('Error tracked:', {
+  console.error("Error tracked:", {
     message: error.message,
     stack: error.stack,
     context,
     timestamp: new Date().toISOString(),
   });
-  
+
   // 本番環境では外部サービス（Sentry等）に送信
-  if (process.env.NODE_ENV === 'production') {
+  if (process.env.NODE_ENV === "production") {
     // Sentry.captureException(error, { extra: context });
   }
 }

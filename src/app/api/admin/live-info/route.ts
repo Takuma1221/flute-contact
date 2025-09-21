@@ -14,27 +14,20 @@ interface LiveInfo {
   deliveryFee: number;
   maxTickets: number;
   notes?: string;
+  programImageUrl?: string;
+  cancelPolicy?: string;
+  cancelDeadlineDays?: number;
   updatedAt: string;
 }
 
 // ライブ情報を保存するJSONファイルのパス
 const LIVE_INFO_FILE = path.join(process.cwd(), "data", "live-info.json");
 
-// データディレクトリの作成
-async function ensureDataDirectory() {
-  const dataDir = path.dirname(LIVE_INFO_FILE);
-  try {
-    await fs.access(dataDir);
-  } catch {
-    await fs.mkdir(dataDir, { recursive: true });
-  }
-}
-
 // デフォルトのライブ情報
 const defaultLiveInfo: LiveInfo = {
   liveDate: "2025年10月4日（土）",
   liveTime1: "14:00",
-  liveTime2: "18:00",
+  liveTime2: "",
   venue: "詳細は予約後にご案内いたします",
   venueAddress: "",
   generalPrice: 4000,
@@ -42,28 +35,51 @@ const defaultLiveInfo: LiveInfo = {
   deliveryFee: 200,
   maxTickets: 10,
   notes: "",
+  programImageUrl: "/images/concert-program.png",
+  cancelPolicy:
+    "お客様都合によるお申込み後のキャンセルおよび返金はお受けしておりません。予めご了承ください。\nなお、当日現金払いを選択されたお客様でご来場いただけなかった場合には、お手数ですが お振込み下さいますようお願いいたします。",
+  cancelDeadlineDays: 0,
   updatedAt: new Date().toISOString(),
 };
 
-// ライブ情報の読み込み
+// ファイルから現在のライブ情報を読み込む
 async function loadLiveInfo(): Promise<LiveInfo> {
   try {
-    await ensureDataDirectory();
     const data = await fs.readFile(LIVE_INFO_FILE, "utf-8");
-    return JSON.parse(data);
+    const parsedData = JSON.parse(data);
+    console.log("[Admin API] Loaded live info:", {
+      programImageUrl: parsedData.programImageUrl
+        ? `${parsedData.programImageUrl.substring(0, 50)}...`
+        : "none",
+      liveDate: parsedData.liveDate,
+    });
+    return parsedData;
   } catch (error) {
+    console.log(
+      "[Admin API] Loading failed, using default:",
+      error instanceof Error ? error.message : "Unknown error"
+    );
     // ファイルが存在しない場合はデフォルト値を返す
     return defaultLiveInfo;
   }
 }
 
-// ライブ情報の保存
+// ライブ情報をファイルに保存する
 async function saveLiveInfo(liveInfo: LiveInfo): Promise<void> {
-  await ensureDataDirectory();
+  // タイムスタンプを追加してキャッシュ無効化
   const dataWithTimestamp = {
     ...liveInfo,
-    updatedAt: new Date().toISOString(),
+    lastUpdated: new Date().toISOString(),
   };
+
+  console.log("[Admin API] Saving live info:", {
+    programImageUrl: dataWithTimestamp.programImageUrl
+      ? `${dataWithTimestamp.programImageUrl.substring(0, 50)}...`
+      : "none",
+    liveDate: dataWithTimestamp.liveDate,
+    lastUpdated: dataWithTimestamp.lastUpdated,
+  });
+
   await fs.writeFile(
     LIVE_INFO_FILE,
     JSON.stringify(dataWithTimestamp, null, 2)
@@ -88,6 +104,14 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+
+    console.log("[Admin API] Received POST data:", {
+      programImageUrl: body.programImageUrl
+        ? `${body.programImageUrl.substring(0, 50)}...`
+        : "none",
+      liveDate: body.liveDate,
+      venue: body.venue,
+    });
 
     // 簡単な認証チェック（本番では適切な認証システムを使用）
     const authHeader = request.headers.get("authorization");
@@ -134,7 +158,10 @@ export async function POST(request: NextRequest) {
     const liveInfo: LiveInfo = {
       liveDate: body.liveDate,
       liveTime1: body.liveTime1,
-      liveTime2: body.liveTime2 || undefined,
+      liveTime2:
+        body.liveTime2 && body.liveTime2.trim() !== ""
+          ? body.liveTime2
+          : undefined,
       venue: body.venue,
       venueAddress: body.venueAddress || undefined,
       generalPrice: body.generalPrice,
@@ -142,6 +169,11 @@ export async function POST(request: NextRequest) {
       deliveryFee: body.deliveryFee,
       maxTickets: body.maxTickets,
       notes: body.notes || undefined,
+      programImageUrl: body.programImageUrl || undefined,
+      // キャンセルポリシーは常にデフォルト値を使用
+      cancelPolicy:
+        "お客様都合によるお申込み後のキャンセルおよび返金はお受けしておりません。予めご了承ください。\nなお、当日現金払いを選択されたお客様でご来場いただけなかった場合には、お手数ですが お振込み下さいますようお願いいたします。",
+      cancelDeadlineDays: 0,
       updatedAt: new Date().toISOString(),
     };
 

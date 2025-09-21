@@ -17,6 +17,7 @@ interface LiveInfo {
   deliveryFee: number;
   maxTickets: number;
   notes?: string;
+  programImageUrl?: string;
   updatedAt: string;
 }
 
@@ -32,6 +33,7 @@ const defaultLiveInfo: LiveInfo = {
   deliveryFee: 200,
   maxTickets: 10,
   notes: "",
+  programImageUrl: "/images/concert-program.png",
   updatedAt: new Date().toISOString(),
 };
 
@@ -63,6 +65,7 @@ export async function GET() {
       deliveryFee: liveInfo.deliveryFee,
       maxTickets: liveInfo.maxTickets,
       notes: liveInfo.notes,
+      programImageUrl: liveInfo.programImageUrl, // パンフレット画像URLを追加
     });
   } catch (error) {
     console.error("Error loading public live info:", error);

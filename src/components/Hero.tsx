@@ -102,7 +102,7 @@ export function Hero() {
               ? `¥${Math.min(
                   liveInfo.studentPrice,
                   liveInfo.generalPrice
-                ).toLocaleString()}〜 | 残席わずか`
+                ).toLocaleString()}〜`
               : "料金調整中"}
           </div>
         </div>

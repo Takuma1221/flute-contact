@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   console.log("Admin auth API called");
-  
+
   try {
     // リクエストボディの解析
     const body = await request.json();
-    console.log("Request body received:", { passwordProvided: !!body.password });
-    
+    console.log("Request body received:", {
+      passwordProvided: !!body.password,
+    });
+
     const { password } = body;
-    
+
     if (!password) {
       console.log("No password provided");
       return NextResponse.json(
@@ -17,14 +19,14 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     // 環境変数からパスワードを取得
     const adminPassword = process.env.ADMIN_PASSWORD;
-    console.log("Environment check:", { 
+    console.log("Environment check:", {
       adminPasswordSet: !!adminPassword,
-      nodeEnv: process.env.NODE_ENV 
+      nodeEnv: process.env.NODE_ENV,
     });
-    
+
     if (!adminPassword) {
       console.error("ADMIN_PASSWORD environment variable not set");
       return NextResponse.json(
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-    
+
     if (password === adminPassword) {
       console.log("Authentication successful");
       return NextResponse.json({ success: true });

@@ -62,7 +62,7 @@ export default function AdminPage() {
   // 認証処理
   const handleLogin = async (data: LoginData) => {
     console.log("Attempting login...");
-    
+
     try {
       const response = await fetch("/api/admin/auth", {
         method: "POST",
@@ -73,11 +73,11 @@ export default function AdminPage() {
       });
 
       console.log("Response status:", response.status);
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("API Error Response:", errorText);
-        
+
         try {
           const errorData = JSON.parse(errorText);
           setMessage(errorData.error || `サーバーエラー (${response.status})`);
@@ -100,16 +100,23 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setMessage(`ネットワークエラー: ${error instanceof Error ? error.message : "不明なエラー"}`);
+      setMessage(
+        `ネットワークエラー: ${error instanceof Error ? error.message : "不明なエラー"}`
+      );
     }
   };
 
   // ライブ情報の読み込み
   const loadLiveInfo = useCallback(async () => {
     try {
-      const response = await fetch("/api/admin/live-info");
+      // キャッシュを回避するためのタイムスタンプを追加
+      const response = await fetch(`/api/admin/live-info?t=${Date.now()}`);
       if (response.ok) {
         const data = await response.json();
+        console.log(
+          "Loaded live info with programImageUrl length:",
+          data.programImageUrl?.length || 0
+        );
         setLiveInfo(data);
         liveForm.reset(data);
       }
@@ -121,6 +128,10 @@ export default function AdminPage() {
   // ライブ情報の保存
   const handleSaveLiveInfo = async (data: LiveInfoData) => {
     setIsLoading(true);
+    console.log(
+      "Saving live info with programImageUrl length:",
+      data.programImageUrl?.length || 0
+    );
     try {
       const response = await fetch("/api/admin/live-info", {
         method: "POST",
@@ -129,10 +140,19 @@ export default function AdminPage() {
       });
 
       if (response.ok) {
-        setMessage("ライブ情報を更新しました");
+        setMessage(
+          "ライブ情報を更新しました。変更をすぐに確認するには、メインページを更新してください。"
+        );
         setLiveInfo(data);
+        console.log("Live info saved successfully");
+        // 保存後に少し待ってからメインページのキャッシュをクリア
+        setTimeout(() => {
+          // 管理画面からも最新情報を再読み込み
+          loadLiveInfo();
+        }, 1000);
       } else {
         setMessage("更新に失敗しました");
+        console.error("Failed to save live info:", response.status);
       }
     } catch (error) {
       console.error("保存エラー:", error);
@@ -169,6 +189,11 @@ export default function AdminPage() {
       const reader = new FileReader();
       reader.onload = () => {
         const base64 = reader.result as string;
+        console.log("Image uploaded - Base64 length:", base64.length);
+        console.log(
+          "Image uploaded - Base64 preview:",
+          base64.substring(0, 100) + "..."
+        );
         liveForm.setValue("programImageUrl", base64);
         setMessage(
           "画像をアップロードしました。保存ボタンを押して確定してください。"

@@ -11,6 +11,6 @@ export async function GET() {
       googleClientEmailSet: !!process.env.GOOGLE_CLIENT_EMAIL,
       googlePrivateKeySet: !!process.env.GOOGLE_PRIVATE_KEY,
       googleSpreadsheetIdSet: !!process.env.GOOGLE_SPREADSHEET_ID,
-    }
+    },
   });
 }

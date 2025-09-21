@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="bg-gray-900 text-white py-12">
       <div className="max-w-4xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* 講師情報 */}
           <div>
             <h3 className="text-lg font-medium mb-4">吉原りえ</h3>
@@ -14,16 +14,6 @@ export function Footer() {
               上野学園大学音楽学部器楽学科フルート専門卒業
               <br />
               Lieto Posto主宰
-            </p>
-          </div>
-
-          {/* 会場情報 */}
-          <div>
-            <h3 className="text-lg font-medium mb-4">Lieto Posto</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">
-              岡山県笠岡市
-              <br />
-              ※詳細住所は予約後にご案内いたします
             </p>
           </div>
 

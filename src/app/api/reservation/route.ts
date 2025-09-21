@@ -20,7 +20,10 @@ interface ReservationData {
 }
 
 // Resendクライアント初期化（環境変数チェック付き）
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
+const resend = process.env.RESEND_API_KEY
+  ? new Resend(process.env.RESEND_API_KEY)
+  : null;
 
 // Google Sheets認証
 async function getGoogleSheetsClient() {
@@ -37,6 +40,30 @@ async function getGoogleSheetsClient() {
   });
 
   return google.sheets({ version: "v4", auth });
+}
+
+// ライブ情報を取得する関数
+async function loadLiveInfo() {
+  try {
+    const fs = await import("fs/promises");
+    const path = await import("path");
+    const liveInfoFile = path.join(process.cwd(), "data", "live-info.json");
+    const data = await fs.readFile(liveInfoFile, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    // デフォルト値を返す
+    return {
+      liveDate: "2025年10月4日（土）",
+      liveTime1: "14:00",
+      liveTime2: "18:00",
+      venue: "詳細は予約後にご案内いたします",
+      venueAddress: "",
+      generalPrice: 4000,
+      studentPrice: 3000,
+      deliveryFee: 200,
+      maxTickets: 10,
+    };
+  }
 }
 
 // チケット価格
@@ -73,10 +100,12 @@ function calculateTotal(
 }
 
 // Google Sheetsにデータ保存
-async function saveToGoogleSheets(data: ReservationData) {
+async function saveToGoogleSheets(data: ReservationData): Promise<boolean> {
   try {
+    console.log("Starting Google Sheets save process...");
     const sheets = await getGoogleSheetsClient();
-    const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID;
+    const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID!;
+    console.log("Spreadsheet ID:", spreadsheetId);
 
     if (!spreadsheetId) {
       throw new Error("GOOGLE_SPREADSHEET_ID is not configured");
@@ -111,14 +140,27 @@ async function saveToGoogleSheets(data: ReservationData) {
       ],
     ];
 
-    await sheets.spreadsheets.values.append({
+    // スプレッドシートのシート情報を取得
+    const spreadsheetInfo = await sheets.spreadsheets.get({
       spreadsheetId,
-      range: "Sheet1!A:L",
+    });
+
+    // 最初のシートの名前を取得（日本語名に対応）
+    const firstSheetName =
+      spreadsheetInfo.data.sheets?.[0]?.properties?.title || "Sheet1";
+    console.log("Using sheet name:", firstSheetName);
+
+    const result = await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: `${firstSheetName}!A:L`,
       valueInputOption: "RAW",
+      insertDataOption: "INSERT_ROWS",
       requestBody: {
         values,
       },
     });
+
+    console.log("Successfully saved to Google Sheets:", result.data);
 
     return true;
   } catch (error) {
@@ -130,6 +172,18 @@ async function saveToGoogleSheets(data: ReservationData) {
 // 確認メール送信
 async function sendConfirmationEmail(data: ReservationData) {
   try {
+    console.log("Starting email send process...");
+    console.log("Email recipient:", data.email);
+
+    if (!resend) {
+      console.error("Resend client not initialized - API key missing");
+      return false;
+    }
+
+    // 管理画面のライブ情報を取得
+    const liveInfo = await loadLiveInfo();
+    console.log("Loaded live info for email:", liveInfo);
+
     const total = calculateTotal(
       data.generalTickets,
       data.studentTickets,
@@ -148,8 +202,16 @@ async function sendConfirmationEmail(data: ReservationData) {
       case "bank":
         paymentInstructions = `
 【銀行振込の場合】
-振込先: 三井住友銀行 池袋支店 普通 xxxxxxx
-口座名義: ヨシハラ リエ
+⚫︎ 三井住友銀行
+【支店名】池袋支店
+【口座番号】普通 2207443
+【口座名義】 吉原理恵
+
+⚫︎ 郵便局
+【記号】10170
+【番号】82596591
+【口座名義】ヨシハラリエ
+
 振込期限: お申し込みから1週間以内
 ※振込手数料はお客様負担となります`;
         break;
@@ -167,14 +229,19 @@ PayPay ID: fueneko5656
         break;
     }
 
+    // 日程表示の整理
+    const liveDateDisplay = data.liveDate.includes("14:00")
+      ? `${liveInfo.liveDate} ${liveInfo.liveTime1}開演`
+      : `${liveInfo.liveDate} ${liveInfo.liveTime2}開演`;
+
     const emailContent = `${data.name}様
 
-この度は、フルートライブにお申し込みいただき、ありがとうございます。
+この度は、吉原りえフルートライブにお申し込みいただき、誠にありがとうございます。
 以下の内容でご予約を承りました。
 
 ■ご予約内容
 ・お名前: ${data.name}
-・ライブ日程: ${data.liveDate}
+・ライブ日程: ${liveDateDisplay}
 ・チケット詳細: 一般 ${data.generalTickets}枚、学生 ${data.studentTickets}枚
 ・受取方法: ${deliveryMethodName}
 ・合計金額: ¥${total.toLocaleString()}
@@ -182,39 +249,40 @@ PayPay ID: fueneko5656
 
 ■お支払いについて${paymentInstructions}
 
-■会場アクセス
-Lieto Posto（リエト・ポスト）
-住所: 〇〇県〇〇市〇〇町〇-〇-〇
-アクセス: https://lietoposto.com/studio
+■会場情報
+会場: ${liveInfo.venue}${
+      liveInfo.venueAddress
+        ? `
+住所: ${liveInfo.venueAddress}`
+        : ""
+    }
 開場: 開演の30分前
-駐車場: 〇台（要事前連絡）
 
 ■注意事項
 ・チケット受取: ${deliveryMethodName}
-・キャンセルの場合は、3日前までにご連絡ください
-・座席は当日先着順でのご案内となります
+・お客様都合によるお申込み後のキャンセルおよび返金はお受けしておりません
+・当日現金払いを選択されたお客様でご来場いただけなかった場合には、10/10(金)までにお振込み下さいますようお願いいたします
 ・録音・録画はご遠慮ください
 
 ■お問い合わせ
 吉原りえ
-メール: contact@lietoposto.com
-電話: xxx-xxxx-xxxx
+メール: takumakawauso4649@gmail.com
+Instagram: @fueneko_rie
 
 素敵な音楽の時間をお楽しみに！
 心よりお待ちしております。`;
 
-    if (!resend) {
-      console.warn("Resend API key not configured. Email not sent.");
-      return false;
-    }
+    console.log("Sending email to:", data.email);
 
-    await resend.emails.send({
-      from: "noreply@yourdomain.com", // 実際のドメインに変更してください
+    const emailResult = await resend.emails.send({
+      from: "onboarding@resend.dev", // Resendのテスト用ドメイン
       to: data.email,
       subject:
         "【フルートライブ】チケットご予約ありがとうございます - 吉原りえ",
       text: emailContent,
     });
+
+    console.log("Email sent successfully:", emailResult);
 
     return true;
   } catch (error) {
@@ -225,7 +293,19 @@ Lieto Posto（リエト・ポスト）
 
 export async function POST(request: NextRequest) {
   try {
-    const data: ReservationData = await request.json();
+    // リクエストボディの確認
+    const body = await request.text();
+    console.log("Received request body:", body);
+
+    if (!body) {
+      return NextResponse.json(
+        { error: "リクエストボディが空です" },
+        { status: 400 }
+      );
+    }
+
+    const data: ReservationData = JSON.parse(body);
+    console.log("Parsed data:", data);
 
     // データ検証
     if (!data.name || !data.email || !data.phone) {
@@ -242,9 +322,13 @@ export async function POST(request: NextRequest) {
     }
 
     // 確認メール送信
+    console.log("Attempting to send confirmation email...");
     const emailSent = await sendConfirmationEmail(data);
+    console.log("Email send result:", emailSent);
     if (!emailSent) {
       console.error("Failed to send confirmation email");
+    } else {
+      console.log("Confirmation email sent successfully");
     }
 
     return NextResponse.json(

@@ -26,9 +26,18 @@ export function LiveInfo() {
   useEffect(() => {
     const fetchLiveInfo = async () => {
       try {
-        const response = await fetch("/api/live-info");
+        // キャッシュを回避するためのタイムスタンプを追加
+        const response = await fetch(`/api/live-info?t=${Date.now()}`);
         if (response.ok) {
           const data = await response.json();
+          console.log(
+            "LiveInfo: Fetched programImageUrl length:",
+            data.programImageUrl?.length || 0
+          );
+          console.log(
+            "LiveInfo: Using image URL:",
+            data.programImageUrl || "/images/concert-program.png"
+          );
           setLiveInfo(data);
         }
       } catch (error) {
@@ -91,9 +100,16 @@ export function LiveInfo() {
               <div className="text-center">
                 <p className="font-medium text-gray-900">開演時間</p>
                 <p className="text-gray-600">
-                  {liveInfo?.liveTime1 && `①${liveInfo.liveTime1}開演`}
-                  {liveInfo?.liveTime2 && ` / ②${liveInfo.liveTime2}開演`}
-                  {!liveInfo?.liveTime1 && "未設定"}
+                  {liveInfo?.liveTime1 ? (
+                    <>
+                      {`①${liveInfo.liveTime1}開演`}
+                      {liveInfo.liveTime2 &&
+                        liveInfo.liveTime2 !== liveInfo.liveTime1 &&
+                        ` / ②${liveInfo.liveTime2}開演`}
+                    </>
+                  ) : (
+                    "未設定"
+                  )}
                 </p>
               </div>
             </div>

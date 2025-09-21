@@ -32,6 +32,7 @@ GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
 GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"
 GOOGLE_SPREADSHEET_ID=your_spreadsheet_id_here
 RESEND_API_KEY=your_resend_api_key_here
+ADMIN_PASSWORD=your_secure_admin_password
 ```
 
 ### オプション環境変数
@@ -42,10 +43,21 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 
 ## 4. デプロイ後の確認事項
 
+### 基本機能
+
 - [ ] フォーム送信が正常に動作する
 - [ ] Google Sheets にデータが保存される
 - [ ] メール送信が正常に動作する
 - [ ] レスポンシブデザインが正しく表示される
+
+### 管理機能
+
+- [ ] 管理画面 (/admin) にアクセスできる
+- [ ] 管理画面認証が正常に動作する
+- [ ] ライブ情報の更新が反映される
+- [ ] パンフレット画像のアップロードが動作する
+- [ ] キャンセルポリシーの変更が反映される
+- [ ] ステータスAPI (/api/admin/status) が正常応答する
 
 ## 5. カスタムドメインの設定（オプション）
 
@@ -67,12 +79,10 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 ### よくある問題
 
 1. **Google Sheets API エラー**
-
    - サービスアカウントのメール権限を確認
    - スプレッドシートの共有設定を確認
 
 2. **メール送信エラー**
-
    - Resend API キーを確認
    - 送信者ドメインの認証を確認
 

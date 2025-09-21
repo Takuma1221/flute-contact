@@ -42,11 +42,11 @@ graph LR
 
 ### 📊 ブランチ別デプロイ戦略
 
-| ブランチ | デプロイ先 | URL例 | 用途 |
-|----------|------------|-------|------|
-| `main` | **本番環境** | `https://your-app.vercel.app` | 一般ユーザー向け |
-| `develop` | **ステージング** | `https://your-app-git-develop.vercel.app` | 内部テスト用 |
-| `feature/*` | **プレビュー** | `https://your-app-git-feature-xxx.vercel.app` | 機能開発確認 |
+| ブランチ    | デプロイ先       | URL例                                         | 用途             |
+| ----------- | ---------------- | --------------------------------------------- | ---------------- |
+| `main`      | **本番環境**     | `https://your-app.vercel.app`                 | 一般ユーザー向け |
+| `develop`   | **ステージング** | `https://your-app-git-develop.vercel.app`     | 内部テスト用     |
+| `feature/*` | **プレビュー**   | `https://your-app-git-feature-xxx.vercel.app` | 機能開発確認     |
 
 ### ⚡ 自動デプロイのタイミング
 
@@ -101,10 +101,10 @@ vercel --prod
 
 ### 🔐 セキュリティレベル
 
-| 環境変数の種類 | プレフィックス | 公開範囲 | 用途例 |
-|----------------|----------------|----------|--------|
-| **サーバーサイド** | なし | サーバーのみ | API キー、データベース接続 |
-| **クライアントサイド** | `NEXT_PUBLIC_` | ブラウザに公開 | サイトURL、公開設定 |
+| 環境変数の種類         | プレフィックス | 公開範囲       | 用途例                     |
+| ---------------------- | -------------- | -------------- | -------------------------- |
+| **サーバーサイド**     | なし           | サーバーのみ   | API キー、データベース接続 |
+| **クライアントサイド** | `NEXT_PUBLIC_` | ブラウザに公開 | サイトURL、公開設定        |
 
 ### 📝 設定方法
 
@@ -277,12 +277,12 @@ Task timed out after 10 seconds
 
 ```javascript
 // 本番環境でのデバッグ
-console.log('Environment:', process.env.NODE_ENV);
-console.log('Vercel URL:', process.env.VERCEL_URL);
+console.log("Environment:", process.env.NODE_ENV);
+console.log("Vercel URL:", process.env.VERCEL_URL);
 
 // 条件付きログ
-if (process.env.NODE_ENV === 'development') {
-  console.log('Debug info:', debugData);
+if (process.env.NODE_ENV === "development") {
+  console.log("Debug info:", debugData);
 }
 ```
 
@@ -290,14 +290,14 @@ if (process.env.NODE_ENV === 'development') {
 
 ### 💰 無料プラン（Hobby）
 
-| 項目 | 制限 | 説明 |
-|------|------|------|
-| **帯域幅** | 100GB/月 | 転送量の上限 |
-| **関数実行時間** | 10秒 | API Routes のタイムアウト |
-| **関数呼び出し** | 100万回/月 | サーバーレス関数の実行回数 |
-| **ビルド時間** | 6000分/月 | CI/CD の実行時間 |
-| **チームサイズ** | 1人 | 個人開発のみ |
-| **カスタムドメイン** | ✅ 無制限 | 独自ドメインの設定 |
+| 項目                 | 制限       | 説明                       |
+| -------------------- | ---------- | -------------------------- |
+| **帯域幅**           | 100GB/月   | 転送量の上限               |
+| **関数実行時間**     | 10秒       | API Routes のタイムアウト  |
+| **関数呼び出し**     | 100万回/月 | サーバーレス関数の実行回数 |
+| **ビルド時間**       | 6000分/月  | CI/CD の実行時間           |
+| **チームサイズ**     | 1人        | 個人開発のみ               |
+| **カスタムドメイン** | ✅ 無制限  | 独自ドメインの設定         |
 
 ### 💼 有料プラン（Pro: $20/月）
 
@@ -319,15 +319,15 @@ if (process.env.NODE_ENV === 'development') {
 
 ```javascript
 // middleware.js
-import { geolocation } from '@vercel/edge';
+import { geolocation } from "@vercel/edge";
 
 export function middleware(request) {
   const { country } = geolocation(request);
-  
-  if (country === 'JP') {
-    return NextResponse.rewrite('/jp/home');
+
+  if (country === "JP") {
+    return NextResponse.rewrite("/jp/home");
   }
-  
+
   return NextResponse.next();
 }
 ```
@@ -339,17 +339,17 @@ export function middleware(request) {
 module.exports = {
   // 画像最適化
   images: {
-    domains: ['example.com'],
-    formats: ['image/webp', 'image/avif'],
+    domains: ["example.com"],
+    formats: ["image/webp", "image/avif"],
   },
-  
+
   // 静的生成の最適化
   trailingSlash: false,
   poweredByHeader: false,
-  
+
   // バンドル分析
-  analyzeBundle: process.env.ANALYZE === 'true',
-}
+  analyzeBundle: process.env.ANALYZE === "true",
+};
 ```
 
 ### 🌍 国際化（i18n）
@@ -358,20 +358,20 @@ module.exports = {
 // next.config.js
 module.exports = {
   i18n: {
-    locales: ['ja', 'en'],
-    defaultLocale: 'ja',
+    locales: ["ja", "en"],
+    defaultLocale: "ja",
     domains: [
       {
-        domain: 'example.com',
-        defaultLocale: 'ja',
+        domain: "example.com",
+        defaultLocale: "ja",
       },
       {
-        domain: 'example.com/en',
-        defaultLocale: 'en',
+        domain: "example.com/en",
+        defaultLocale: "en",
       },
     ],
   },
-}
+};
 ```
 
 ### 🛡️ セキュリティヘッダー
@@ -381,24 +381,24 @@ module.exports = {
 module.exports = {
   headers: async () => [
     {
-      source: '/(.*)',
+      source: "/(.*)",
       headers: [
         {
-          key: 'X-Frame-Options',
-          value: 'DENY',
+          key: "X-Frame-Options",
+          value: "DENY",
         },
         {
-          key: 'X-Content-Type-Options',
-          value: 'nosniff',
+          key: "X-Content-Type-Options",
+          value: "nosniff",
         },
         {
-          key: 'Referrer-Policy',
-          value: 'origin-when-cross-origin',
+          key: "Referrer-Policy",
+          value: "origin-when-cross-origin",
         },
       ],
     },
   ],
-}
+};
 ```
 
 ## 📋 チェックリスト
