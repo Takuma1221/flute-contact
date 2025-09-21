@@ -25,7 +25,7 @@
 ### 1. プロジェクトのクローン
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/flute-contact.git
+git clone https://github.com/Takuma1221/flute-contact.git
 cd flute-contact
 npm install
 ```

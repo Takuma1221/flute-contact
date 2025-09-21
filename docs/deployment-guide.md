@@ -8,7 +8,7 @@ git add .
 git commit -m "Initial commit: フルートライブ予約LP"
 
 # GitHubリポジトリを作成して push
-git remote add origin https://github.com/YOUR_USERNAME/flute-contact.git
+git remote add origin https://github.com/Takuma1221/flute-contact.git
 git branch -M main
 git push -u origin main
 ```
