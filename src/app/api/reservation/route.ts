@@ -19,11 +19,15 @@ interface ReservationData {
   agreePrivacy: boolean;
 }
 
-// Resendクライアント初期化
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Resendクライアント初期化（環境変数チェック付き）
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Google Sheets認証
 async function getGoogleSheetsClient() {
+  if (!process.env.GOOGLE_CLIENT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+    throw new Error("Google Sheets credentials not configured");
+  }
+
   const auth = new google.auth.GoogleAuth({
     credentials: {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
@@ -198,6 +202,11 @@ Lieto Posto（リエト・ポスト）
 
 素敵な音楽の時間をお楽しみに！
 心よりお待ちしております。`;
+
+    if (!resend) {
+      console.warn("Resend API key not configured. Email not sent.");
+      return false;
+    }
 
     await resend.emails.send({
       from: "noreply@yourdomain.com", // 実際のドメインに変更してください
