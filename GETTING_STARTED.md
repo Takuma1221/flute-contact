@@ -38,13 +38,16 @@ npm run dev
 ## 🎯 次のステップ
 
 ### 学習を深めたい方
+
 📖 **[完全学習ガイド](./docs/learning/00-getting-started.md)** で詳しく学習できます
 
 ### カスタマイズしたい方
+
 - `data/live-info.json` でコンサート情報を変更
 - `src/app/globals.css` でデザインをカスタマイズ
 
 ### 本番公開したい方
+
 🚀 **[デプロイガイド](./docs/deployment-guide.md)** で Vercel に公開
 
 ## 🆘 困ったときは
@@ -52,6 +55,7 @@ npm run dev
 ### よくあるエラーと解決法
 
 **❌ `npm install` でエラーが出る**
+
 ```bash
 # Node.jsのバージョンを確認
 node --version
@@ -59,12 +63,14 @@ node --version
 ```
 
 **❌ ポート3000が使用中**
+
 ```bash
 # 別のポートで起動
 npm run dev -- -p 3001
 ```
 
 **❌ 画面が真っ白**
+
 - ブラウザの開発者ツール（F12）でエラーを確認
 - [トラブルシューティングガイド](./docs/learning/00-getting-started.md#trouble-shooting)を参照
 
@@ -83,5 +89,5 @@ npm run dev -- -p 3001
 
 ---
 
-**🎉 おめでとうございます！** 
+**🎉 おめでとうございます！**
 これで基本的な環境構築は完了です。次は[学習ガイド](./docs/learning/)でより深く学習しましょう！

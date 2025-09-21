@@ -103,6 +103,11 @@ function calculateTotal(
 async function saveToGoogleSheets(data: ReservationData): Promise<boolean> {
   try {
     console.log("Starting Google Sheets save process...");
+    console.log("Environment variables check:");
+    console.log("- GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL ? "SET" : "MISSING");
+    console.log("- GOOGLE_PRIVATE_KEY:", process.env.GOOGLE_PRIVATE_KEY ? "SET" : "MISSING");
+    console.log("- GOOGLE_SPREADSHEET_ID:", process.env.GOOGLE_SPREADSHEET_ID ? "SET" : "MISSING");
+    
     const sheets = await getGoogleSheetsClient();
     const spreadsheetId = process.env.GOOGLE_SPREADSHEET_ID!;
     console.log("Spreadsheet ID:", spreadsheetId);
@@ -141,15 +146,21 @@ async function saveToGoogleSheets(data: ReservationData): Promise<boolean> {
     ];
 
     // スプレッドシートのシート情報を取得
+    console.log("Attempting to get spreadsheet info...");
     const spreadsheetInfo = await sheets.spreadsheets.get({
       spreadsheetId,
     });
+    console.log("Successfully got spreadsheet info");
 
     // 最初のシートの名前を取得（日本語名に対応）
     const firstSheetName =
       spreadsheetInfo.data.sheets?.[0]?.properties?.title || "Sheet1";
     console.log("Using sheet name:", firstSheetName);
+    console.log("Sheet count:", spreadsheetInfo.data.sheets?.length || 0);
 
+    console.log("Attempting to append data to sheet...");
+    console.log("Data to append:", values);
+    
     const result = await sheets.spreadsheets.values.append({
       spreadsheetId,
       range: `${firstSheetName}!A:L`,
@@ -160,20 +171,54 @@ async function saveToGoogleSheets(data: ReservationData): Promise<boolean> {
       },
     });
 
-    console.log("Successfully saved to Google Sheets:", result.data);
+    console.log("Successfully saved to Google Sheets!");
+    console.log("Result:", result.data);
+    console.log("Updated range:", result.data.updates?.updatedRange);
+    console.log("Updated rows:", result.data.updates?.updatedRows);
 
     return true;
-  } catch (error) {
-    console.error("Error saving to Google Sheets:", error);
+  } catch (error: unknown) {
+    console.error("=== Google Sheets Error Details ===");
+    console.error("Full error:", error);
+    
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    
     if (error instanceof Error) {
       console.error("Error message:", error.message);
       console.error("Error stack:", error.stack);
     }
+    
+    // Google API固有のエラー情報
+    if (typeof error === 'object' && error !== null) {
+      const errorObj = error as Record<string, unknown>;
+      if (errorObj.response && typeof errorObj.response === 'object') {
+        const response = errorObj.response as Record<string, unknown>;
+        console.error("HTTP Status:", response.status);
+        console.error("Response data:", response.data);
+      }
+      
+      if (errorObj.code) {
+        console.error("Error code:", errorObj.code);
+      }
+    }
+    
     // 環境変数をチェック
-    console.error("Environment check:");
-    console.error("GOOGLE_CLIENT_EMAIL exists:", !!process.env.GOOGLE_CLIENT_EMAIL);
-    console.error("GOOGLE_PRIVATE_KEY exists:", !!process.env.GOOGLE_PRIVATE_KEY);
-    console.error("GOOGLE_SPREADSHEET_ID exists:", !!process.env.GOOGLE_SPREADSHEET_ID);
+    console.error("Environment variables status:");
+    console.error("- GOOGLE_CLIENT_EMAIL:", process.env.GOOGLE_CLIENT_EMAIL ? "SET" : "❌ MISSING");
+    console.error("- GOOGLE_PRIVATE_KEY:", process.env.GOOGLE_PRIVATE_KEY ? "SET" : "❌ MISSING");
+    console.error("- GOOGLE_SPREADSHEET_ID:", process.env.GOOGLE_SPREADSHEET_ID ? "SET" : "❌ MISSING");
+    
+    // よくあるエラーの診断
+    if (errorMessage.includes("403")) {
+      console.error("❌ Permission denied - Check if the service account has access to the spreadsheet");
+    }
+    if (errorMessage.includes("404")) {
+      console.error("❌ Spreadsheet not found - Check the GOOGLE_SPREADSHEET_ID");
+    }
+    if (errorMessage.includes("401")) {
+      console.error("❌ Authentication failed - Check Google credentials");
+    }
+    
     return false;
   }
 }

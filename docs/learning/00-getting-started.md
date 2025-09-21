@@ -5,12 +5,14 @@
 ## 🎯 このシステムで学べること
 
 ### 基本概念
+
 - **Webアプリケーション**の構成と動作原理
 - **フロントエンド**と**バックエンド**の違い
 - **API**を使った外部サービス連携
 - **レスポンシブデザイン**（PC・タブレット・スマホ対応）
 
 ### 実践的なスキル
+
 - **React/Next.js**を使ったモダンWeb開発
 - **TypeScript**による型安全なプログラミング
 - **フォーム処理**とバリデーション
@@ -20,11 +22,13 @@
 ## 🏃‍♂️ クイックスタート（5分で動作確認）
 
 ### 必要なもの
+
 - Node.js（バージョン18以上）
 - Gitアカウント
 - Googleアカウント
 
 ### ステップ1: プロジェクト取得
+
 ```bash
 # プロジェクトをダウンロード
 git clone https://github.com/Takuma1221/flute-contact.git
@@ -35,6 +39,7 @@ npm install
 ```
 
 ### ステップ2: 開発サーバー起動
+
 ```bash
 # 開発モードで起動
 npm run dev
@@ -45,6 +50,7 @@ npm run dev
 ## 📚 段階別学習ロードマップ
 
 ### 【レベル1】基本理解（1-2週間）
+
 1. **サイトを触ってみる**
    - 予約フォームを試す
    - 管理画面（`/admin`）を確認
@@ -55,6 +61,7 @@ npm run dev
    - [プロジェクト構成](./learning/03-project-structure.md)
 
 ### 【レベル2】外部サービス連携（2-3週間）
+
 1. **API連携を理解**
    - [外部API・サービス解説](./learning/02-external-apis.md)
    - Google Sheets、メール送信の仕組み
@@ -64,6 +71,7 @@ npm run dev
    - [画像管理システム](./learning/04-image-management-system.md)
 
 ### 【レベル3】運用・拡張（3-4週間）
+
 1. **デプロイと運用**
    - [Vercel完全ガイド](./learning/05-vercel-complete-guide.md)
    - [セキュリティ対策](./learning/06-security-error-handling.md)
@@ -78,6 +86,7 @@ npm run dev
 ### よくあるエラー
 
 #### 1. `npm install` でエラーが出る
+
 ```bash
 # Nodeのバージョン確認
 node --version
@@ -87,15 +96,18 @@ node --version
 ```
 
 #### 2. 環境変数が設定できない
+
 - Windows: `.env.local`ファイルをメモ帳で作成
 - Mac: ターミナルで `touch .env.local` コマンド実行
 
 #### 3. Google Sheets接続エラー
+
 1. サービスアカウントが正しく作成されているか確認
 2. スプレッドシートの共有設定を確認
 3. 環境変数のコピペミスがないかチェック
 
 #### 4. メール送信できない
+
 1. Resendアカウントの作成確認
 2. APIキーの有効性確認
 3. 送信者メールアドレスの検証完了確認
@@ -103,6 +115,7 @@ node --version
 ## 💡 学習のコツ
 
 ### 🎯 効果的な学習方法
+
 1. **実際に動かしながら学ぶ**
    - コードを変更して結果を確認
    - エラーを恐れず試行錯誤
@@ -118,6 +131,7 @@ node --version
    - Discord コミュニティ
 
 ### 📝 記録を残す
+
 - 学習ログを書く
 - 躓いた点とその解決方法をメモ
 - 改善アイデアをリストアップ
@@ -125,6 +139,7 @@ node --version
 ## 🚀 次のステップ
 
 ### カスタマイズアイデア
+
 1. **デザイン変更**
    - 色合いの変更
    - レイアウトの調整
@@ -141,6 +156,7 @@ node --version
    - PWA化
 
 ### 類似プロジェクト案
+
 - 美容院予約システム
 - レストラン予約システム
 - イベント管理システム
@@ -150,11 +166,13 @@ node --version
 ## 🤝 サポート
 
 ### 質問がある場合
+
 1. エラーメッセージを正確にコピー
 2. 実行した手順を整理
 3. 環境情報（OS、Nodeバージョン等）を確認
 
 ### 参考リソース
+
 - [Next.js Learn](https://nextjs.org/learn) - 公式チュートリアル
 - [TypeScript for JavaScript Programmers](https://www.typescriptlang.org/docs/handbook/typescript-in-5-minutes.html)
 - [React Hook Form Get Started](https://react-hook-form.com/get-started)

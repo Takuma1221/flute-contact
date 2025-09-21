@@ -25,6 +25,7 @@
 **プログラミング初学者でも安心！** このプロジェクトは学習用として最適化されています。
 
 ### クイックスタート（5分で動作確認）
+
 ```bash
 git clone https://github.com/Takuma1221/flute-contact.git
 cd flute-contact
@@ -35,8 +36,9 @@ npm run dev
 📖 **詳しい学習ガイド**: [初回セットアップガイド](./docs/learning/00-getting-started.md)
 
 ### 学べる技術
+
 - ✅ **React/Next.js** - モダンフロントエンド開発
-- ✅ **TypeScript** - 型安全なプログラミング  
+- ✅ **TypeScript** - 型安全なプログラミング
 - ✅ **API連携** - Google Sheets、メール送信
 - ✅ **レスポンシブデザイン** - 全デバイス対応
 - ✅ **デプロイ** - Vercelを使った本番公開
@@ -176,15 +178,19 @@ flute-contact/
 ## 🆘 よくある質問（初学者向け）
 
 ### Q: エラーが出て動かない
+
 **A:** [初回セットアップガイド](./docs/learning/00-getting-started.md#trouble-shooting)で解決方法を確認してください。
 
 ### Q: プログラミング未経験でも大丈夫？
+
 **A:** はい！[学習ロードマップ](./docs/learning/00-getting-started.md#learning-roadmap)で段階的に学べます。
 
 ### Q: どの技術から学び始めればいい？
+
 **A:** [学習ガイド](./docs/learning/)でHTML/CSS → JavaScript → React の順で学習することをお勧めします。
 
 ### Q: 実際のプロジェクトとして使えますか？
+
 **A:** はい！本番環境での利用を想定して設計されています。
 
 ## 📞 サポート

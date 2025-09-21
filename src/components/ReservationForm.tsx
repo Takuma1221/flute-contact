@@ -141,9 +141,9 @@ export function ReservationForm() {
       if (response.ok) {
         setSubmitStatus("success");
         // ページトップにスクロール
-        window.scrollTo({ 
-          top: 0, 
-          behavior: 'smooth' 
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth",
         });
         reset();
       } else {
@@ -164,21 +164,7 @@ export function ReservationForm() {
           チケット予約
         </h2>
 
-        {submitStatus === "success" && (
-          <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800">
-              ご予約ありがとうございます。確認メールをお送りしましたのでご確認ください。
-            </p>
-          </div>
-        )}
 
-        {submitStatus === "error" && (
-          <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800">
-              エラーが発生しました。しばらくしてから再度お試しください。
-            </p>
-          </div>
-        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* 基本情報 */}
@@ -581,6 +567,23 @@ export function ReservationForm() {
               {isSubmitting ? "送信中..." : "予約を申し込む"}
             </button>
           </div>
+
+          {/* 送信完了・エラーメッセージ */}
+          {submitStatus === "success" && (
+            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-green-800 text-center">
+                ご予約ありがとうございます。確認メールをお送りしましたのでご確認ください。
+              </p>
+            </div>
+          )}
+
+          {submitStatus === "error" && (
+            <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 text-center">
+                エラーが発生しました。しばらくしてから再度お試しください。
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </section>
