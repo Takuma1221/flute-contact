@@ -1,4 +1,4 @@
-import { Instagram, Mail, Phone } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 
 export function Footer() {
   return (
@@ -21,9 +21,7 @@ export function Footer() {
           <div>
             <h3 className="text-lg font-medium mb-4">Lieto Posto</h3>
             <p className="text-gray-300 text-sm leading-relaxed">
-              〒xxx-xxxx
-              <br />
-              岡山県笠岡市xxx
+              岡山県笠岡市
               <br />
               ※詳細住所は予約後にご案内いたします
             </p>
@@ -41,11 +39,6 @@ export function Footer() {
                 >
                   contact@lietoposto.com
                 </a>
-              </div>
-
-              <div className="flex items-center space-x-3">
-                <Phone className="h-4 w-4 text-gray-400" />
-                <span className="text-gray-300 text-sm">xxx-xxxx-xxxx</span>
               </div>
 
               <div className="flex items-center space-x-3">
