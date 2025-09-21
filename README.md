@@ -1,36 +1,147 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# フルートライブ予約システム
 
-## Getting Started
+フルーティスト吉原りえ氏のライブ予約 LP（ランディングページ）とフォーム管理システムです。
 
-First, run the development server:
+## 🎵 特徴
+
+- 美しいレスポンシブデザイン
+- リアルタイムフォームバリデーション
+- Google Sheets 自動データ保存
+- 予約者への自動メール送信
+- 完全無料でデプロイ可能
+
+## 🛠 技術スタック
+
+- **フレームワーク**: Next.js 15 (App Router)
+- **スタイリング**: Tailwind CSS
+- **フォーム**: React Hook Form + Zod
+- **データベース**: Google Sheets API
+- **メール送信**: Resend
+- **デプロイ**: Vercel
+- **言語**: TypeScript
+
+## 🚀 セットアップ
+
+### 1. プロジェクトのクローン
+
+```bash
+git clone https://github.com/YOUR_USERNAME/flute-contact.git
+cd flute-contact
+npm install
+```
+
+### 2. 環境変数の設定
+
+`.env.local`ファイルを作成：
+
+```env
+GOOGLE_CLIENT_EMAIL=your-service-account@your-project.iam.gserviceaccount.com
+GOOGLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----\n"
+GOOGLE_SPREADSHEET_ID=your_spreadsheet_id_here
+RESEND_API_KEY=your_resend_api_key_here
+```
+
+### 3. Google Sheets API の設定
+
+詳細は[Google Sheets 設定手順](./docs/google-sheets-setup.md)を参照してください。
+
+### 4. 開発サーバーの起動
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[http://localhost:3000](http://localhost:3000)でアプリケーションが確認できます。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📁 プロジェクト構造
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+flute-contact/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── api/reservation/    # 予約API
+│   │   ├── globals.css         # グローバルスタイル
+│   │   └── page.tsx           # メインページ
+│   ├── components/            # Reactコンポーネント
+│   │   ├── Hero.tsx          # ヒーローセクション
+│   │   ├── About.tsx         # プロフィール
+│   │   ├── LiveInfo.tsx      # ライブ情報
+│   │   ├── ReservationForm.tsx # 予約フォーム
+│   │   └── Footer.tsx        # フッター
+│   └── types/                # TypeScript型定義
+├── docs/                     # ドキュメント
+│   ├── premise.prompt.md     # プロジェクト要件
+│   ├── google-form-analysis.md # フォーム分析
+│   ├── design-analysis.md    # デザイン分析
+│   ├── google-sheets-setup.md # Google Sheets設定
+│   └── deployment-guide.md   # デプロイ手順
+└── public/                   # 静的ファイル
+```
 
-## Learn More
+## 🎯 主要機能
 
-To learn more about Next.js, take a look at the following resources:
+### 1. ライブ情報表示
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 開催日時、会場情報
+- チケット料金表示
+- プログラム内容
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 2. 予約フォーム
 
-## Deploy on Vercel
+- リアルタイムバリデーション
+- 複数の支払い方法対応
+- チケット枚数選択
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. データ管理
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Google Sheets への自動保存
+- 予約情報の一元管理
+
+### 4. 自動メール送信
+
+- 予約完了通知
+- 支払い方法別案内
+- カスタマイズ可能なテンプレート
+
+## 💰 料金
+
+このシステムは完全無料で運用できます：
+
+- **Next.js/Vercel**: 無料プラン
+- **Google Sheets API**: 月間 100 万リクエスト無料
+- **Resend**: 月間 3,000 通のメール送信無料
+
+## 📚 ドキュメント
+
+- [Google Sheets 設定手順](./docs/google-sheets-setup.md)
+- [デプロイ手順](./docs/deployment-guide.md)
+- [フォーム内容分析](./docs/google-form-analysis.md)
+- [デザイン分析](./docs/design-analysis.md)
+
+## 🤝 カスタマイズ
+
+### ライブ情報の更新
+
+`docs/google-form-analysis.md`の「TODO」セクションを確認し、実際のライブ情報に合わせて以下を更新してください：
+
+- 日程・時間
+- 会場情報
+- チケット料金
+- プログラム内容
+
+### デザインのカスタマイズ
+
+- `src/app/globals.css`: カスタムスタイル
+- `src/components/`: 各コンポーネントのスタイル調整
+
+## 📞 サポート
+
+問題や質問がある場合は、以下を確認してください：
+
+1. [トラブルシューティング](./docs/deployment-guide.md#トラブルシューティング)
+2. GitHub の Issues
+3. プロジェクトドキュメント
+
+## 📄 ライセンス
+
+このプロジェクトは MIT ライセンスの下で公開されています。
