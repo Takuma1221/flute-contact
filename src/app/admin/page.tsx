@@ -60,14 +60,29 @@ export default function AdminPage() {
   });
 
   // 認証処理
-  const handleLogin = (data: LoginData) => {
-    // 簡単なパスワード認証（本番では適切な認証システムを使用）
-    if (data.password === "flute2025admin") {
-      setIsAuthenticated(true);
-      localStorage.setItem("admin_auth", "true");
-      loadLiveInfo();
-    } else {
-      setMessage("パスワードが間違っています");
+  const handleLogin = async (data: LoginData) => {
+    try {
+      const response = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ password: data.password }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setIsAuthenticated(true);
+        localStorage.setItem("admin_auth", "true");
+        setMessage("");
+        loadLiveInfo();
+      } else {
+        setMessage(result.error || "認証に失敗しました");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setMessage("認証エラーが発生しました");
     }
   };
 
