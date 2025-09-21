@@ -61,6 +61,8 @@ export default function AdminPage() {
 
   // 認証処理
   const handleLogin = async (data: LoginData) => {
+    console.log("Attempting login...");
+    
     try {
       const response = await fetch("/api/admin/auth", {
         method: "POST",
@@ -70,9 +72,25 @@ export default function AdminPage() {
         body: JSON.stringify({ password: data.password }),
       });
 
-      const result = await response.json();
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("API Error Response:", errorText);
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          setMessage(errorData.error || `サーバーエラー (${response.status})`);
+        } catch {
+          setMessage(`サーバーエラーが発生しました (${response.status})`);
+        }
+        return;
+      }
 
-      if (response.ok && result.success) {
+      const result = await response.json();
+      console.log("Login result:", result);
+
+      if (result.success) {
         setIsAuthenticated(true);
         localStorage.setItem("admin_auth", "true");
         setMessage("");
@@ -82,7 +100,7 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      setMessage("認証エラーが発生しました");
+      setMessage(`ネットワークエラー: ${error instanceof Error ? error.message : "不明なエラー"}`);
     }
   };
 
