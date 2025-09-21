@@ -15,7 +15,7 @@ export function About() {
                   width={358}
                   height={540}
                   className="w-full h-full object-cover"
-                  style={{ objectPosition: 'center 25%' }}
+                  style={{ objectPosition: "center 25%" }}
                 />
               </div>
               {/* フルートの装飾画像 */}

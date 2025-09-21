@@ -155,24 +155,26 @@ export function LiveInfo() {
                 </div>
               </div>
 
-              <div 
-                className="rounded-lg overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow" 
+              <div
+                className="rounded-lg overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow"
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log('パンフレット画像がクリックされました');
+                  console.log("パンフレット画像がクリックされました");
                   setIsModalOpen(true);
                 }}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
+                  if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
                     setIsModalOpen(true);
                   }
                 }}
               >
                 <Image
-                  src={liveInfo?.programImageUrl || "/images/concert-program.png"}
+                  src={
+                    liveInfo?.programImageUrl || "/images/concert-program.png"
+                  }
                   alt="コンサートプログラム"
                   width={583}
                   height={830}
@@ -195,7 +197,7 @@ export function LiveInfo() {
           </div>
         </div>
       </div>
-      
+
       {/* パンフレット画像モーダル */}
       <ImageModal
         src={liveInfo?.programImageUrl || "/images/concert-program.png"}

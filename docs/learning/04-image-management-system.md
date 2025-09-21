@@ -45,7 +45,7 @@
   height={600}
   priority
   className="w-full h-full object-cover"
-  style={{ objectPosition: 'center 25%' }}
+  style={{ objectPosition: "center 25%" }}
 />
 ```
 
@@ -59,6 +59,7 @@ object-position: center 25%;
 ```
 
 **学習ポイント:**
+
 - `object-fit: cover` で画像をコンテナにフィット
 - `object-position` で表示する部分を制御
 - パーセント値で細かい調整が可能
@@ -67,10 +68,11 @@ object-position: center 25%;
 
 ```tsx
 // Tailwind CSSでのレスポンシブサイズ指定
-className="w-32 h-32 md:w-36 md:h-36"
+className = "w-32 h-32 md:w-36 md:h-36";
 ```
 
 **学習ポイント:**
+
 - モバイル: `w-32 h-32` (128px × 128px)
 - デスクトップ: `md:w-36 md:h-36` (144px × 144px)
 - ブレークポイントでの適切なサイズ調整
@@ -98,20 +100,20 @@ export function ImageModal({ src, alt, isOpen, onClose }: ImageModalProps) {
   // ESCキーでモーダルを閉じる
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEsc);
+      document.addEventListener("keydown", handleEsc);
       // スクロールを無効化
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
@@ -135,7 +137,7 @@ const [isModalOpen, setIsModalOpen] = useState(false);
 
 // クリックイベントハンドラー
 const handleImageClick = () => {
-  console.log('パンフレット画像がクリックされました');
+  console.log("パンフレット画像がクリックされました");
   setIsModalOpen(true);
 };
 ```
@@ -143,8 +145,8 @@ const handleImageClick = () => {
 #### 2. アクセシビリティ対応
 
 ```tsx
-<div 
-  className="cursor-pointer" 
+<div
+  className="cursor-pointer"
   onClick={handleImageClick}
   role="button"
   tabIndex={0}
@@ -158,6 +160,7 @@ const handleImageClick = () => {
 ```
 
 **学習ポイント:**
+
 - `role="button"` でスクリーンリーダー対応
 - `tabIndex={0}` でキーボードフォーカス対応
 - Enter/Spaceキーでの操作対応
@@ -168,12 +171,12 @@ const handleImageClick = () => {
 useEffect(() => {
   if (isOpen) {
     // モーダル表示時にスクロールを無効化
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
   }
 
   return () => {
     // コンポーネントのアンマウント時にスクロールを復元
-    document.body.style.overflow = 'unset';
+    document.body.style.overflow = "unset";
   };
 }, [isOpen]);
 ```
@@ -184,41 +187,46 @@ useEffect(() => {
 
 ```tsx
 // admin/page.tsx
-const handleImageUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-  const file = event.target.files?.[0];
-  if (!file) return;
+const handleImageUpload = useCallback(
+  async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  // ファイルサイズ制限（5MB）
-  if (file.size > 5 * 1024 * 1024) {
-    setMessage("ファイルサイズが大きすぎます（最大5MB）");
-    return;
-  }
+    // ファイルサイズ制限（5MB）
+    if (file.size > 5 * 1024 * 1024) {
+      setMessage("ファイルサイズが大きすぎます（最大5MB）");
+      return;
+    }
 
-  // ファイルタイプ検証
-  if (!file.type.startsWith('image/')) {
-    setMessage("画像ファイルを選択してください");
-    return;
-  }
+    // ファイルタイプ検証
+    if (!file.type.startsWith("image/")) {
+      setMessage("画像ファイルを選択してください");
+      return;
+    }
 
-  setUploading(true);
-  setMessage("");
+    setUploading(true);
+    setMessage("");
 
-  try {
-    // Base64エンコード
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64 = reader.result as string;
-      liveForm.setValue("programImageUrl", base64);
-      setMessage("画像をアップロードしました。保存ボタンを押して確定してください。");
-    };
-    reader.readAsDataURL(file);
-  } catch (error) {
-    console.error("アップロードエラー:", error);
-    setMessage("画像のアップロードに失敗しました");
-  } finally {
-    setUploading(false);
-  }
-}, [liveForm]);
+    try {
+      // Base64エンコード
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        liveForm.setValue("programImageUrl", base64);
+        setMessage(
+          "画像をアップロードしました。保存ボタンを押して確定してください。"
+        );
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("アップロードエラー:", error);
+      setMessage("画像のアップロードに失敗しました");
+    } finally {
+      setUploading(false);
+    }
+  },
+  [liveForm]
+);
 ```
 
 ### 🔧 技術ポイント
@@ -235,6 +243,7 @@ reader.readAsDataURL(file);
 ```
 
 **学習ポイント:**
+
 - `FileReader` でファイルをBase64に変換
 - `readAsDataURL()` でData URLスキーマ形式に変換
 - 非同期処理のためコールバック関数で結果を処理
@@ -249,7 +258,7 @@ if (file.size > 5 * 1024 * 1024) {
 }
 
 // タイプ検証
-if (!file.type.startsWith('image/')) {
+if (!file.type.startsWith("image/")) {
   setMessage("画像ファイルを選択してください");
   return;
 }
@@ -268,17 +277,19 @@ const liveInfoSchema = z.object({
 liveForm.setValue("programImageUrl", base64);
 
 // プレビュー表示
-{liveForm.watch("programImageUrl") && (
-  <div className="mt-4">
-    <Image
-      src={liveForm.watch("programImageUrl") || "/images/concert-program.png"}
-      alt="コンサートプログラム"
-      width={300}
-      height={400}
-      className="w-full h-auto rounded-lg shadow-md"
-    />
-  </div>
-)}
+{
+  liveForm.watch("programImageUrl") && (
+    <div className="mt-4">
+      <Image
+        src={liveForm.watch("programImageUrl") || "/images/concert-program.png"}
+        alt="コンサートプログラム"
+        width={300}
+        height={400}
+        className="w-full h-auto rounded-lg shadow-md"
+      />
+    </div>
+  );
+}
 ```
 
 ## パフォーマンス最適化
@@ -287,9 +298,12 @@ liveForm.setValue("programImageUrl", base64);
 
 ```tsx
 // 関数の再作成を防ぐ
-const handleImageUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-  // アップロード処理
-}, [liveForm]);
+const handleImageUpload = useCallback(
+  async (event: React.ChangeEvent<HTMLInputElement>) => {
+    // アップロード処理
+  },
+  [liveForm]
+);
 
 const loadLiveInfo = useCallback(async () => {
   // データ読み込み処理

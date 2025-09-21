@@ -110,7 +110,9 @@ export default function AdminPage() {
   };
 
   // 画像アップロード機能
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -121,7 +123,7 @@ export default function AdminPage() {
     }
 
     // ファイル形式チェック
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       setMessage("画像ファイルを選択してください");
       return;
     }
@@ -135,7 +137,9 @@ export default function AdminPage() {
       reader.onload = () => {
         const base64 = reader.result as string;
         liveForm.setValue("programImageUrl", base64);
-        setMessage("画像をアップロードしました。保存ボタンを押して確定してください。");
+        setMessage(
+          "画像をアップロードしました。保存ボタンを押して確定してください。"
+        );
       };
       reader.readAsDataURL(file);
     } catch (error) {
@@ -456,7 +460,7 @@ export default function AdminPage() {
                     PNG、JPG形式、最大5MB。現在の表示を変更したい場合のみアップロードしてください。
                   </p>
                 </div>
-                
+
                 {/* 現在の画像プレビュー */}
                 {liveForm.watch("programImageUrl") && (
                   <div className="mt-4">
@@ -465,7 +469,10 @@ export default function AdminPage() {
                     </p>
                     <div className="max-w-xs">
                       <Image
-                        src={liveForm.watch("programImageUrl") || "/images/concert-program.png"}
+                        src={
+                          liveForm.watch("programImageUrl") ||
+                          "/images/concert-program.png"
+                        }
                         alt="コンサートプログラム"
                         width={300}
                         height={400}

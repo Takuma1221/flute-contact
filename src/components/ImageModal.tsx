@@ -15,20 +15,20 @@ export function ImageModal({ src, alt, isOpen, onClose }: ImageModalProps) {
   // ESCキーでモーダルを閉じる
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         onClose();
       }
     };
 
     if (isOpen) {
-      document.addEventListener('keydown', handleEsc);
+      document.addEventListener("keydown", handleEsc);
       // スクロールを無効化
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEsc);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEsc);
+      document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
 
@@ -45,7 +45,7 @@ export function ImageModal({ src, alt, isOpen, onClose }: ImageModalProps) {
         >
           <X className="w-8 h-8" />
         </button>
-        
+
         {/* 画像 */}
         <div className="relative bg-white rounded-lg overflow-hidden shadow-2xl">
           <Image
@@ -57,10 +57,10 @@ export function ImageModal({ src, alt, isOpen, onClose }: ImageModalProps) {
           />
         </div>
       </div>
-      
+
       {/* 背景クリックで閉じる */}
-      <div 
-        className="absolute inset-0 -z-10" 
+      <div
+        className="absolute inset-0 -z-10"
         onClick={onClose}
         aria-label="閉じる"
       />

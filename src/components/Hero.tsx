@@ -58,7 +58,7 @@ export function Hero() {
               width={358}
               height={540}
               className="w-32 h-32 md:w-40 md:h-40 rounded-full mx-auto shadow-lg border-4 border-white/20 object-cover"
-              style={{ objectPosition: 'center 25%' }}
+              style={{ objectPosition: "center 25%" }}
             />
           </div>
           <h1 className="text-4xl md:text-6xl font-light text-white mb-4 text-shadow">
