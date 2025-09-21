@@ -140,11 +140,6 @@ export function ReservationForm() {
 
       if (response.ok) {
         setSubmitStatus("success");
-        // ページトップにスクロール
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth",
-        });
         reset();
       } else {
         setSubmitStatus("error");
