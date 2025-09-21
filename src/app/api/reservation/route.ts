@@ -9,8 +9,9 @@ interface ReservationData {
   email: string;
   phone: string;
   liveDate: string;
-  seatType: string;
-  ticketCount: string;
+  generalTickets: number;
+  studentTickets: number;
+  deliveryMethod: string;
   paymentMethod: string;
   requests?: string;
   howDidYouKnow: string;
@@ -34,25 +35,37 @@ async function getGoogleSheetsClient() {
   return google.sheets({ version: "v4", auth });
 }
 
-// 席種と価格のマッピング
-const seatPrices = {
-  front: { name: "前席（1-3列目）", price: 3500 },
-  middle: { name: "中席（4-6列目）", price: 3000 },
-  back: { name: "後席（7列目以降）", price: 2500 },
+// チケット価格
+const TICKET_PRICES = {
+  general: 4000,
+  student: 3000,
+  delivery: 200,
+};
+
+// 受取方法のマッピング
+const deliveryMethods = {
+  pickup: "当日受取（無料）",
+  postal: "郵送（¥200）",
 };
 
 // 支払い方法のマッピング
 const paymentMethods = {
-  bank: "銀行振込",
-  paypay: "PayPay",
+  bank: "銀行振込（三井住友銀行）",
+  paypay: "PayPay（fueneko5656）",
   cash: "現金（当日受付）",
 };
 
 // 合計金額計算
-function calculateTotal(seatType: string, ticketCount: string): number {
-  const price = seatPrices[seatType as keyof typeof seatPrices]?.price || 0;
-  const count = ticketCount === "4+" ? 4 : parseInt(ticketCount);
-  return price * count;
+function calculateTotal(
+  generalTickets: number,
+  studentTickets: number,
+  deliveryMethod: string
+): number {
+  const ticketTotal =
+    generalTickets * TICKET_PRICES.general +
+    studentTickets * TICKET_PRICES.student;
+  const deliveryFee = deliveryMethod === "postal" ? TICKET_PRICES.delivery : 0;
+  return ticketTotal + deliveryFee;
 }
 
 // Google Sheetsにデータ保存
@@ -65,10 +78,14 @@ async function saveToGoogleSheets(data: ReservationData) {
       throw new Error("GOOGLE_SPREADSHEET_ID is not configured");
     }
 
-    const total = calculateTotal(data.seatType, data.ticketCount);
-    const seatTypeName =
-      seatPrices[data.seatType as keyof typeof seatPrices]?.name ||
-      data.seatType;
+    const total = calculateTotal(
+      data.generalTickets,
+      data.studentTickets,
+      data.deliveryMethod
+    );
+    const deliveryMethodName =
+      deliveryMethods[data.deliveryMethod as keyof typeof deliveryMethods] ||
+      data.deliveryMethod;
     const paymentMethodName =
       paymentMethods[data.paymentMethod as keyof typeof paymentMethods] ||
       data.paymentMethod;
@@ -81,8 +98,8 @@ async function saveToGoogleSheets(data: ReservationData) {
         data.email,
         data.phone,
         data.liveDate,
-        seatTypeName,
-        data.ticketCount,
+        `一般 ${data.generalTickets}枚, 学生 ${data.studentTickets}枚`,
+        deliveryMethodName,
         total,
         paymentMethodName,
         data.requests || "",
@@ -109,10 +126,14 @@ async function saveToGoogleSheets(data: ReservationData) {
 // 確認メール送信
 async function sendConfirmationEmail(data: ReservationData) {
   try {
-    const total = calculateTotal(data.seatType, data.ticketCount);
-    const seatTypeName =
-      seatPrices[data.seatType as keyof typeof seatPrices]?.name ||
-      data.seatType;
+    const total = calculateTotal(
+      data.generalTickets,
+      data.studentTickets,
+      data.deliveryMethod
+    );
+    const deliveryMethodName =
+      deliveryMethods[data.deliveryMethod as keyof typeof deliveryMethods] ||
+      data.deliveryMethod;
     const paymentMethodName =
       paymentMethods[data.paymentMethod as keyof typeof paymentMethods] ||
       data.paymentMethod;
@@ -123,16 +144,16 @@ async function sendConfirmationEmail(data: ReservationData) {
       case "bank":
         paymentInstructions = `
 【銀行振込の場合】
-振込先: 〇〇銀行 〇〇支店 普通 xxxxxxx
+振込先: 三井住友銀行 池袋支店 普通 xxxxxxx
 口座名義: ヨシハラ リエ
-振込期限: ライブ日の3日前まで
+振込期限: お申し込みから1週間以内
 ※振込手数料はお客様負担となります`;
         break;
       case "paypay":
         paymentInstructions = `
 【PayPayの場合】
-PayPay ID: yoshihara-rie-flute
-支払い期限: ライブ日の3日前まで`;
+PayPay ID: fueneko5656
+支払い期限: お申し込みから1週間以内`;
         break;
       case "cash":
         paymentInstructions = `
@@ -150,8 +171,8 @@ PayPay ID: yoshihara-rie-flute
 ■ご予約内容
 ・お名前: ${data.name}
 ・ライブ日程: ${data.liveDate}
-・席種: ${seatTypeName}
-・チケット枚数: ${data.ticketCount}
+・チケット詳細: 一般 ${data.generalTickets}枚、学生 ${data.studentTickets}枚
+・受取方法: ${deliveryMethodName}
 ・合計金額: ¥${total.toLocaleString()}
 ・支払い方法: ${paymentMethodName}
 
@@ -165,7 +186,7 @@ Lieto Posto（リエト・ポスト）
 駐車場: 〇台（要事前連絡）
 
 ■注意事項
-・チケットは当日受付でお渡しします
+・チケット受取: ${deliveryMethodName}
 ・キャンセルの場合は、3日前までにご連絡ください
 ・座席は当日先着順でのご案内となります
 ・録音・録画はご遠慮ください

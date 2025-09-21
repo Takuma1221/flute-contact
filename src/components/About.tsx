@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export function About() {
   return (
     <section className="py-20 bg-white">
@@ -5,10 +7,26 @@ export function About() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* プロフィール画像 */}
           <div className="order-2 lg:order-1">
-            <div className="aspect-square bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg shadow-lg flex items-center justify-center">
-              <div className="text-center p-8">
-                <div className="w-32 h-32 bg-slate-300 rounded-full mx-auto mb-4"></div>
-                <p className="text-sm text-gray-600">フルーティスト 吉原りえ</p>
+            <div className="relative">
+              <div className="aspect-square rounded-lg shadow-lg overflow-hidden">
+                <Image
+                  src="/images/flutist-profile.png"
+                  alt="フルーティスト 吉原りえ"
+                  width={358}
+                  height={540}
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center 25%' }}
+                />
+              </div>
+              {/* フルートの装飾画像 */}
+              <div className="absolute -bottom-6 -right-6 w-32 h-32 md:w-36 md:h-36 rounded-full bg-white shadow-lg p-3">
+                <Image
+                  src="/images/flute-instrument.png"
+                  alt="フルート"
+                  width={1920}
+                  height={819}
+                  className="w-full h-full object-cover rounded-full"
+                />
               </div>
             </div>
           </div>

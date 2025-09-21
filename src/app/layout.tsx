@@ -3,17 +3,17 @@ import { Noto_Sans_JP, Noto_Serif_JP } from "next/font/google";
 import "./globals.css";
 
 const notoSansJP = Noto_Sans_JP({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  variable: '--font-noto-sans-jp',
-  display: 'swap',
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-noto-sans-jp",
+  display: "swap",
 });
 
 const notoSerifJP = Noto_Serif_JP({
-  weight: ['400', '500', '700'],
-  subsets: ['latin'],
-  variable: '--font-noto-serif-jp',
-  display: 'swap',
+  weight: ["400", "500", "700"],
+  subsets: ["latin"],
+  variable: "--font-noto-serif-jp",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
