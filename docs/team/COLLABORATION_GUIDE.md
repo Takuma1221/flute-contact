@@ -1,6 +1,7 @@
 # 🤝 GitHub協業開発ガイド
 
 ## 📋 基本情報
+
 - **プロジェクト**: フルート演奏会予約システム
 - **開発者**: 2名
 - **リポジトリ**: 個人リポジトリでの共同開発
@@ -10,22 +11,25 @@
 ## 🌿 ブランチ戦略
 
 ### ブランチ構成
+
 ```
 main (本番環境)
 ├── develop (開発統合ブランチ)
     ├── feature/task-1-terminology-update
-    ├── feature/task-2-pricing-revision  
+    ├── feature/task-2-pricing-revision
     ├── feature/task-4-multi-image-upload
     └── hotfix/emergency-fix
 ```
 
 ### ブランチ命名規則
+
 - **機能開発**: `feature/task-{番号}-{概要}`
 - **バグ修正**: `bugfix/issue-{番号}-{概要}`
 - **緊急修正**: `hotfix/{概要}`
 - **リファクタリング**: `refactor/{概要}`
 
 ### 例
+
 ```bash
 feature/task-1-terminology-update
 feature/task-4-multi-image-upload
@@ -38,6 +42,7 @@ hotfix/email-sending-error
 ## 🔄 開発フロー
 
 ### 1. 作業開始前
+
 ```bash
 # 最新のdevelopブランチを取得
 git checkout develop
@@ -48,6 +53,7 @@ git checkout -b feature/task-1-terminology-update
 ```
 
 ### 2. 開発・コミット
+
 ```bash
 # 作業後にコミット
 git add .
@@ -61,6 +67,7 @@ Closes #1"
 ```
 
 ### 3. プッシュ・プルリクエスト
+
 ```bash
 # リモートにプッシュ
 git push origin feature/task-1-terminology-update
@@ -70,12 +77,14 @@ git push origin feature/task-1-terminology-update
 ```
 
 ### 4. レビュー・マージ
+
 - 相手のレビューを受ける
 - 修正があれば対応
 - 承認後、developにマージ
 - featureブランチを削除
 
 ### 5. 本番デプロイ
+
 ```bash
 # developが安定したらmainにマージ
 git checkout main
@@ -89,6 +98,7 @@ git push origin main
 ## 📝 コミットメッセージ規約
 
 ### フォーマット
+
 ```
 <type>: <subject>
 
@@ -98,6 +108,7 @@ git push origin main
 ```
 
 ### Type一覧
+
 - `feat`: 新機能
 - `fix`: バグ修正
 - `docs`: ドキュメント
@@ -107,6 +118,7 @@ git push origin main
 - `chore`: ビルド・補助ツール関連
 
 ### 例
+
 ```
 feat: 管理画面に複数画像アップロード機能を追加
 
@@ -122,16 +134,18 @@ Closes #4
 ## 🎯 GitHub Issues活用
 
 ### Issue作成ルール
+
 1. **タイトル**: `[Task-1] 用語統一：ライブ→演奏会`
 2. **ラベル**: 優先度・種別を設定
 3. **担当者**: アサイン
 4. **マイルストーン**: Phase別に設定
 
 ### ラベル設定
+
 ```
 優先度:
 - priority/high 🔴
-- priority/medium 🟡  
+- priority/medium 🟡
 - priority/low 🟢
 
 種別:
@@ -152,25 +166,31 @@ Closes #4
 ```
 
 ### Issue テンプレート例
+
 ```markdown
 ## 📋 タスク概要
+
 「ライブ」を「演奏会」に全システムで統一する
 
 ## 🎯 受け入れ条件
+
 - [ ] フロントエンド全ページの表記変更
 - [ ] メール文面の用語統一
 - [ ] 管理画面ラベルの更新
 - [ ] コンソールログ・コメントも統一
 
 ## 📊 影響範囲
+
 - src/components/ 全体
 - src/app/api/reservation/route.ts
 - メールテンプレート
 
 ## ⏱️ 見積工数
+
 2-3時間
 
 ## 📝 備考
+
 特になし
 ```
 
@@ -179,10 +199,12 @@ Closes #4
 ## 📊 GitHub Projects設定
 
 ### 1. Project作成
+
 - **名前**: "フルート演奏会システム改善"
 - **テンプレート**: "Feature"を選択
 
 ### 2. カラム設定
+
 ```
 📋 Backlog     → 未着手のタスク
 🏗️ In Progress → 作業中
@@ -192,6 +214,7 @@ Closes #4
 ```
 
 ### 3. 自動化設定
+
 - Issue作成時 → Backlogに自動追加
 - PRドラフト作成時 → In Progressに移動
 - PR作成時 → In Reviewに移動
@@ -201,43 +224,86 @@ Closes #4
 
 ## 🛡️ リポジトリ保護設定
 
-### ブランチ保護ルール（main・develop）
+⚠️ **重要**: 個人アカウントのプライベートリポジトリでは、ブランチ保護ルールが**表示のみ**で実際には強制されません。
+
+### 解決策の選択肢
+
+#### 🥇 推奨: パブリックリポジトリに変更
+
+```
+Settings → General → Danger Zone → "Make public"
+→ ブランチ保護ルールが完全に機能
+```
+
+#### 🥈 代替: 手動運用（紳士協定）
+
+技術的な制約があるため、以下のルールを**チーム内で徹底**：
+
+```
+❌ main/develop ブランチに直接プッシュしない
+✅ 必ずfeatureブランチでPRを作成
+✅ 相手の承認を得てからマージ
+✅ レビューコメントは必ず解決
+```
+
+### ブランチ保護ルール（参考）
+
 ```
 ☑️ Require a pull request before merging
 ☑️ Require approvals (1)
 ☑️ Dismiss stale reviews
-☑️ Require status checks to pass
+❌ Require status checks to pass (無効推奨)
 ☑️ Require conversation resolution before merging
 ☑️ Include administrators
 ```
 
 ### 設定手順
+
 1. Settings → Branches
 2. "Add rule"をクリック
 3. Branch name pattern: `main`, `develop`
-4. 上記ルールを有効化
+4. 上記ルールを有効化（参考・心理的効果）
 
 ---
 
 ## 👥 協業のベストプラクティス
 
 ### 🗣️ コミュニケーション
+
 - **毎日**: 進捗を簡単に共有
 - **週1**: オンライン作業会
 - **Issue**: 疑問・提案はIssueで議論
 - **PR**: レビューは24時間以内に
 
+### 🛡️ 手動運用のセルフチェック
+
+**プッシュ前の確認**:
+
+- [ ] mainブランチに直接作業していないか？
+- [ ] featureブランチから作業しているか？
+- [ ] PRを作成済みか？
+
+**マージ前の確認**:
+
+- [ ] 相手のレビュー・承認を得たか？
+- [ ] すべてのコメントに返答したか？
+- [ ] 会話をResolveしたか？
+- [ ] 動作テストを実行したか？
+
 ### 🔄 作業分担
+
 - **初期**: スキルレベルに応じて分担
 - **後期**: 得意分野をクロストレーニング
 
 ### 📋 レビューポイント
+
 - 機能要件を満たしているか
 - コードスタイルは統一されているか
 - セキュリティ上の問題はないか
 - パフォーマンスに影響はないか
 
 ### 🚨 緊急対応
+
 - **P0障害**: hotfixブランチで即座対応
 - **Slack/Discord**: 緊急時の連絡手段
 
@@ -246,6 +312,7 @@ Closes #4
 ## 🛠️ 開発環境セットアップ
 
 ### 友達の環境構築
+
 ```bash
 # リポジトリをクローン
 git clone https://github.com/Takuma1221/flute-contact.git
@@ -263,6 +330,7 @@ npm run dev
 ```
 
 ### 必要な権限設定
+
 1. **Collaborator追加**: Settings → Manage access → Invite
 2. **権限レベル**: Write権限を付与
 
@@ -271,11 +339,13 @@ npm run dev
 ## 📈 進捗管理
 
 ### 週次レビュー
+
 - 完了タスクの確認
 - 次週のタスク計画
 - 問題・ブロッカーの共有
 
 ### マイルストーン設定
+
 - **Phase 1完了**: 2週間後
 - **Phase 2完了**: 1ヶ月後
 - **全体完了**: 2ヶ月後
@@ -285,12 +355,14 @@ npm run dev
 ## 🎉 完了時のチェックリスト
 
 ### マージ前
+
 - [ ] 機能テスト完了
 - [ ] コードレビュー承認
 - [ ] 関連ドキュメント更新
 - [ ] 環境変数・設定ファイル確認
 
 ### リリース後
+
 - [ ] 本番環境動作確認
 - [ ] Issueクローズ
 - [ ] 関連PRクローズ
