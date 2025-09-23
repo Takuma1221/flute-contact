@@ -20,11 +20,13 @@ Google Sheets API は、Google スプレッドシートを**プログラムか�
 ### 🎯 なぜ Google Sheets API を使うのか？
 
 1. **簡単なデータベース代替**
+
    - SQL の知識不要
    - 視覚的にデータを確認可能
    - 非技術者でもデータを編集可能
 
 2. **無料で高機能**
+
    - 月間 100 万リクエストまで無料
    - リアルタイムでのデータ共有
    - 豊富な関数とフィルタリング機能
@@ -83,7 +85,7 @@ async function saveToGoogleSheets(data: ReservationData) {
         data.nameKana, // ふりがな
         data.email, // メールアドレス
         data.phone, // 電話番号
-        data.liveDate, // 演奏会日程
+        data.liveDate, // ライブ日程
         `一般 ${data.generalTickets}枚, 学生 ${data.studentTickets}枚`,
         deliveryMethodName, // 受取方法
         total, // 合計金額
@@ -148,7 +150,7 @@ async function readFromGoogleSheets() {
    C列: ふりがな
    D列: メールアドレス
    E列: 電話番号
-   F列: 演奏会日程
+   F列: ライブ日程
    G列: チケット詳細
    H列: 受取方法
    I列: 合計金額
@@ -172,7 +174,6 @@ async function readFromGoogleSheets() {
    ```
 
 3. **エラーハンドリング**
-
    ```typescript
    try {
      await saveToGoogleSheets(data);
@@ -214,11 +215,13 @@ Resend API は、**開発者向けのメール送信サービス**です。
 ### 🎯 なぜ Resend API を選んだのか？
 
 1. **開発者フレンドリー**
+
    - モダンな API 設計
    - 優れたドキュメント
    - TypeScript 完全対応
 
 2. **高い到達率**
+
    - 専用 IP プール
    - 送信者認証（SPF、DKIM）
    - レピュテーション管理
@@ -259,12 +262,12 @@ async function sendConfirmationEmail(data: ReservationData) {
 
     const emailContent = `${data.name}様
 
-この度は、フルート演奏会にお申し込みいただき、ありがとうございます。
+この度は、フルートライブにお申し込みいただき、ありがとうございます。
 以下の内容でご予約を承りました。
 
 ■ご予約内容
 ・お名前: ${data.name}
-・演奏会日程: ${data.liveDate}
+・ライブ日程: ${data.liveDate}
 ・チケット詳細: 一般 ${data.generalTickets}枚、学生 ${data.studentTickets}枚
 ・受取方法: ${deliveryMethodName}
 ・合計金額: ¥${total.toLocaleString()}
@@ -283,7 +286,7 @@ ${paymentInstructions}
       from: "noreply@yourdomain.com", // 送信者（検証済みドメイン）
       to: data.email, // 宛先
       subject:
-        "【フルート演奏会】チケットご予約ありがとうございます - 吉原りえ",
+        "【フルートライブ】チケットご予約ありがとうございます - 吉原りえ",
       text: emailContent, // テキスト版
       // html: htmlContent,           // HTML版（オプション）
     });
@@ -315,19 +318,19 @@ const htmlTemplate = `
 </head>
 <body>
     <div class="header">
-        <h1>フルート演奏会 予約確認</h1>
+        <h1>フルートライブ 予約確認</h1>
     </div>
     <div class="content">
         <p>${data.name}様</p>
-        <p>この度は、フルート演奏会にお申し込みいただき、ありがとうございます。</p>
+        <p>この度は、フルートライブにお申し込みいただき、ありがとうございます。</p>
         
         <h2>ご予約内容</h2>
         <table>
             <tr><td>お名前:</td><td>${data.name}</td></tr>
-            <tr><td>演奏会日程:</td><td>${data.liveDate}</td></tr>
+            <tr><td>ライブ日程:</td><td>${data.liveDate}</td></tr>
             <tr><td>チケット:</td><td>一般 ${data.generalTickets}枚、学生 ${
-              data.studentTickets
-            }枚</td></tr>
+  data.studentTickets
+}枚</td></tr>
             <tr><td>合計金額:</td><td>¥${total.toLocaleString()}</td></tr>
         </table>
     </div>
@@ -341,7 +344,7 @@ const htmlTemplate = `
 await resend.emails.send({
   from: "noreply@yourdomain.com",
   to: data.email,
-  subject: "【フルート演奏会】チケットご予約ありがとうございます",
+  subject: "【フルートライブ】チケットご予約ありがとうございます",
   html: htmlTemplate,
 });
 ```
@@ -400,7 +403,7 @@ await resend.emails.send({
    // テンプレート関数
    const createConfirmationEmail = (data: ReservationData) => {
      return {
-       subject: `【フルート演奏会】チケットご予約ありがとうございます - ${data.name}様`,
+       subject: `【フルートライブ】チケットご予約ありがとうございます - ${data.name}様`,
        text: generateTextContent(data),
        html: generateHtmlContent(data),
      };
@@ -426,11 +429,13 @@ Vercel は、**フロントエンド特化型のクラウドプラットフォ�
 ### 🎯 なぜ Vercel を選んだのか？
 
 1. **Next.js 最適化**
+
    - Next.js の開発元が提供
    - ゼロコンフィグでデプロイ
    - 自動最適化とパフォーマンス
 
 2. **簡単デプロイ**
+
    - GitHub との統合
    - プッシュするだけで自動デプロイ
    - プレビューデプロイ機能

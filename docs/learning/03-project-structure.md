@@ -50,11 +50,11 @@ flute-contact/
 │   │       │   └── live-info/
 │   │       │       └── route.ts # 管理API
 │   │       └── live-info/
-│   │           └── route.ts    # 公開演奏会情報API
+│   │           └── route.ts    # 公開ライブ情報API
 │   └── components/             # Reactコンポーネント
 │       ├── Hero.tsx            # ヒーローセクション
 │       ├── About.tsx           # プロフィールセクション
-│       ├── LiveInfo.tsx        # 演奏会情報セクション
+│       ├── LiveInfo.tsx        # ライブ情報セクション
 │       ├── ReservationForm.tsx # 予約フォーム
 │       └── Footer.tsx          # フッター
 │
@@ -67,7 +67,7 @@ flute-contact/
 │       └── 03-project-structure.md
 │
 └── data/                       # データファイル（実行時生成）
-    └── live-info.json          # 演奏会情報
+    └── live-info.json          # ライブ情報
 ```
 
 ---
@@ -98,7 +98,7 @@ flute-contact/
     "zod": "^3.24.1", // スキーマバリデーション
     "googleapis": "^144.0.0", // Google APIs
     "resend": "^4.0.1", // メール送信
-    "lucide-react": "^0.468.0" // アイコン演奏会ラリ
+    "lucide-react": "^0.468.0" // アイコンライブラリ
   }
 }
 ```
@@ -175,10 +175,10 @@ const notoSerif = Noto_Serif_JP({
 
 // SEO メタデータ
 export const metadata: Metadata = {
-  title: "フルート演奏会 吉原りえ | チケット予約",
+  title: "フルートライブ 吉原りえ | チケット予約",
   description:
-    "フルートとピアノによる心温まる演奏会。クラシックから現代曲まで幅広いレパートリーをお楽しみください。",
-  keywords: "フルート,演奏会,コンサート,クラシック,音楽,予約",
+    "フルートとピアノによる心温まるライブ。クラシックから現代曲まで幅広いレパートリーをお楽しみください。",
+  keywords: "フルート,ライブ,コンサート,クラシック,音楽,予約",
 };
 
 // 全ページ共通レイアウト
@@ -217,7 +217,7 @@ export default function Home() {
     <main>
       <Hero /> {/* ヒーローセクション */}
       <About /> {/* プロフィールセクション */}
-      <LiveInfo /> {/* 演奏会情報セクション */}
+      <LiveInfo /> {/* ライブ情報セクション */}
       <ReservationForm /> {/* 予約フォームセクション */}
       <Footer /> {/* フッターセクション */}
     </main>
@@ -247,11 +247,11 @@ export function Hero() {
     <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-100">
       <div className="text-center">
         <h1 className="text-4xl md:text-6xl font-light text-gray-900 mb-6">
-          フルート演奏会
+          フルートライブ
         </h1>
         <p className="text-xl md:text-2xl text-gray-700 mb-8">吉原りえ</p>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          フルートとピアノによる心温まる演奏会をお楽しみください
+          フルートとピアノによる心温まるライブをお楽しみください
         </p>
       </div>
     </section>
@@ -550,10 +550,12 @@ try {
 ### 📐 SOLID 原則の適用
 
 1. **単一責任原則 (SRP)**
+
    - 各コンポーネントは 1 つの責任のみ
    - Hero, About, LiveInfo などの明確な分離
 
 2. **開放閉鎖原則 (OCP)**
+
    - 新機能追加時は拡張で対応
    - 既存コードの修正を最小限に
 

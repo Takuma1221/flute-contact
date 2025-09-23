@@ -69,7 +69,7 @@ export function Hero() {
           </p>
         </div>
 
-        {/* 演奏会情報 */}
+        {/* ライブ情報 */}
         <div className="mb-12 p-8 bg-white/10 backdrop-blur-md rounded-lg shadow-lg max-w-2xl mx-auto border border-white/20">
           <h2 className="text-2xl md:text-3xl font-light text-white mb-4">
             フルートリサイタル Vol.19

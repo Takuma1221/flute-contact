@@ -29,7 +29,7 @@ export interface ReservationResponse {
   error?: string;
 }
 
-// 演奏会情報の型定義
+// ライブ情報の型定義
 export interface LiveInfo {
   id: string;
   title: string;
