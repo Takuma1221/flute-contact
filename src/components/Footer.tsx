@@ -24,10 +24,10 @@ export function Footer() {
               <div className="flex items-center space-x-3">
                 <Mail className="h-4 w-4 text-gray-400" />
                 <a
-                  href="mailto:contact@lietoposto.com"
+                  href="mailto:fueneko5656@gmail.com"
                   className="text-gray-300 text-sm hover:text-white transition-colors"
                 >
-                  contact@lietoposto.com
+                  fueneko5656@gmail.com
                 </a>
               </div>
 
