@@ -201,12 +201,32 @@ Closes #4
 
 ## 🛡️ リポジトリ保護設定
 
-### ブランチ保護ルール（main・develop）
+⚠️ **重要**: 個人アカウントのプライベートリポジトリでは、ブランチ保護ルールが**表示のみ**で実際には強制されません。
+
+### 解決策の選択肢
+
+#### 🥇 推奨: パブリックリポジトリに変更
+```
+Settings → General → Danger Zone → "Make public"
+→ ブランチ保護ルールが完全に機能
+```
+
+#### 🥈 代替: 手動運用（紳士協定）
+技術的な制約があるため、以下のルールを**チーム内で徹底**：
+
+```
+❌ main/develop ブランチに直接プッシュしない
+✅ 必ずfeatureブランチでPRを作成
+✅ 相手の承認を得てからマージ  
+✅ レビューコメントは必ず解決
+```
+
+### ブランチ保護ルール（参考）
 ```
 ☑️ Require a pull request before merging
 ☑️ Require approvals (1)
 ☑️ Dismiss stale reviews
-☑️ Require status checks to pass
+❌ Require status checks to pass (無効推奨)
 ☑️ Require conversation resolution before merging
 ☑️ Include administrators
 ```
@@ -215,7 +235,7 @@ Closes #4
 1. Settings → Branches
 2. "Add rule"をクリック
 3. Branch name pattern: `main`, `develop`
-4. 上記ルールを有効化
+4. 上記ルールを有効化（参考・心理的効果）
 
 ---
 
@@ -226,6 +246,19 @@ Closes #4
 - **週1**: オンライン作業会
 - **Issue**: 疑問・提案はIssueで議論
 - **PR**: レビューは24時間以内に
+
+### 🛡️ 手動運用のセルフチェック
+
+**プッシュ前の確認**:
+- [ ] mainブランチに直接作業していないか？
+- [ ] featureブランチから作業しているか？
+- [ ] PRを作成済みか？
+
+**マージ前の確認**:
+- [ ] 相手のレビュー・承認を得たか？
+- [ ] すべてのコメントに返答したか？
+- [ ] 会話をResolveしたか？
+- [ ] 動作テストを実行したか？
 
 ### 🔄 作業分担
 - **初期**: スキルレベルに応じて分担

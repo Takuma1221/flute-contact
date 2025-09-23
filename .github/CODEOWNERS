@@ -1,0 +1,20 @@
+# Global code owners
+# These users will be requested for review when anyone opens a pull request
+* @Takuma1221
+
+# API routes require extra attention
+/src/app/api/ @Takuma1221
+
+# Configuration files
+/.github/ @Takuma1221
+/next.config.ts @Takuma1221
+/package.json @Takuma1221
+/tsconfig.json @Takuma1221
+
+# Documentation
+/docs/ @Takuma1221
+/README.md @Takuma1221
+
+# Environment and deployment
+/.env.example @Takuma1221
+/vercel.json @Takuma1221
