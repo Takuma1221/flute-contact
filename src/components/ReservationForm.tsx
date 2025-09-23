@@ -12,7 +12,7 @@ const reservationSchema = z
     nameKana: z.string().min(1, "ふりがなを入力してください"),
     email: z.string().email("正しいメールアドレスを入力してください"),
     phone: z.string().min(10, "電話番号を入力してください"),
-    liveDate: z.string().min(1, "ライブ日程を選択してください"),
+    liveDate: z.string().min(1, "演奏会日程を選択してください"),
     generalTickets: z
       .number()
       .min(0, "0枚以上を選択してください")
@@ -96,7 +96,7 @@ export function ReservationForm() {
     deliveryMethod === "postal" ? liveInfo.deliveryFee : 0;
   const totalAmount = ticketTotal + deliveryFeeAmount;
 
-  // ライブ情報を取得
+  // 演奏会情報を取得
   useEffect(() => {
     const fetchLiveInfo = async () => {
       try {
@@ -257,7 +257,7 @@ export function ReservationForm() {
                   htmlFor="liveDate"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  ライブ日程 <span className="text-red-500">*</span>
+                  演奏会日程 <span className="text-red-500">*</span>
                 </label>
                 <select
                   id="liveDate"
@@ -510,7 +510,7 @@ export function ReservationForm() {
                     {liveInfo.cancelDeadlineDays !== undefined &&
                       liveInfo.cancelDeadlineDays > 0 && (
                         <div>
-                          • ライブ{liveInfo.cancelDeadlineDays}
+                          • 演奏会{liveInfo.cancelDeadlineDays}
                           日前までのキャンセルは受け付けております。
                         </div>
                       )}
@@ -534,7 +534,7 @@ export function ReservationForm() {
                   <span className="text-red-500">*</span>{" "}
                   個人情報の取り扱いに同意します
                   <div className="text-xs text-gray-500 mt-1">
-                    お預かりした個人情報は、本ライブに関する連絡・案内のみに使用いたします。
+                    お預かりした個人情報は、本演奏会に関する連絡・案内のみに使用いたします。
                   </div>
                 </label>
               </div>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
-// ライブ情報の型定義
+// 演奏会情報の型定義
 interface LiveInfo {
   liveDate: string;
   liveTime1: string;
@@ -20,10 +20,10 @@ interface LiveInfo {
   updatedAt: string;
 }
 
-// ライブ情報を保存するJSONファイルのパス
+// 演奏会情報を保存するJSONファイルのパス
 const LIVE_INFO_FILE = path.join(process.cwd(), "data", "live-info.json");
 
-// デフォルトのライブ情報
+// デフォルトの演奏会情報
 const defaultLiveInfo: LiveInfo = {
   liveDate: "2025年10月4日（土）",
   liveTime1: "14:00",
@@ -42,7 +42,7 @@ const defaultLiveInfo: LiveInfo = {
   updatedAt: new Date().toISOString(),
 };
 
-// ファイルから現在のライブ情報を読み込む
+// ファイルから現在の演奏会情報を読み込む
 async function loadLiveInfo(): Promise<LiveInfo> {
   try {
     const data = await fs.readFile(LIVE_INFO_FILE, "utf-8");
@@ -64,7 +64,7 @@ async function loadLiveInfo(): Promise<LiveInfo> {
   }
 }
 
-// ライブ情報をファイルに保存する
+// 演奏会情報をファイルに保存する
 async function saveLiveInfo(liveInfo: LiveInfo): Promise<void> {
   // タイムスタンプを追加してキャッシュ無効化
   const dataWithTimestamp = {
@@ -112,7 +112,7 @@ async function saveLiveInfo(liveInfo: LiveInfo): Promise<void> {
   }
 }
 
-// GET: ライブ情報の取得
+// GET: 演奏会情報の取得
 export async function GET() {
   try {
     const liveInfo = await loadLiveInfo();
@@ -120,13 +120,13 @@ export async function GET() {
   } catch (error) {
     console.error("Error loading live info:", error);
     return NextResponse.json(
-      { error: "ライブ情報の読み込みに失敗しました" },
+      { error: "演奏会情報の読み込みに失敗しました" },
       { status: 500 }
     );
   }
 }
 
-// POST: ライブ情報の更新
+// POST: 演奏会情報の更新
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -206,7 +206,7 @@ export async function POST(request: NextRequest) {
     await saveLiveInfo(liveInfo);
 
     return NextResponse.json({
-      message: "ライブ情報を更新しました",
+      message: "演奏会情報を更新しました",
       liveInfo,
     });
   } catch (error) {
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        error: "ライブ情報の保存に失敗しました",
+        error: "演奏会情報の保存に失敗しました",
         details: error instanceof Error ? error.message : "Unknown error",
       },
       { status: 500 }
