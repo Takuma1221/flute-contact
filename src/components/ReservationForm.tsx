@@ -159,8 +159,6 @@ export function ReservationForm() {
           チケット予約
         </h2>
 
-
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* 基本情報 */}
           <div className="bg-slate-50 p-6 rounded-lg">

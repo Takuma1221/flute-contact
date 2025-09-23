@@ -78,12 +78,38 @@ async function saveLiveInfo(liveInfo: LiveInfo): Promise<void> {
       : "none",
     liveDate: dataWithTimestamp.liveDate,
     lastUpdated: dataWithTimestamp.lastUpdated,
+    isProduction: process.env.NODE_ENV === "production",
   });
 
-  await fs.writeFile(
-    LIVE_INFO_FILE,
-    JSON.stringify(dataWithTimestamp, null, 2)
-  );
+  try {
+    // 本番環境では読み取り専用のため、一時的にメモリにのみ保存
+    if (process.env.NODE_ENV === "production") {
+      console.log(
+        "[Admin API] Production environment detected - file write skipped"
+      );
+      console.log(
+        "[Admin API] In production, data changes require code deployment"
+      );
+      // 本番環境では、データの永続化は code deployment を通じて行う
+      return;
+    }
+
+    // 開発環境でのみファイル書き込み
+    await fs.writeFile(
+      LIVE_INFO_FILE,
+      JSON.stringify(dataWithTimestamp, null, 2)
+    );
+    console.log("[Admin API] File saved successfully in development");
+  } catch (error) {
+    console.error("[Admin API] Error saving file:", error);
+    if (process.env.NODE_ENV === "production") {
+      console.log(
+        "[Admin API] File write failed in production (expected - read-only filesystem)"
+      );
+    } else {
+      throw error; // 開発環境では再スロー
+    }
+  }
 }
 
 // GET: ライブ情報の取得
