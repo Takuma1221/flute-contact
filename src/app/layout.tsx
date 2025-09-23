@@ -17,8 +17,8 @@ const notoSerifJP = Noto_Serif_JP({
 });
 
 export const metadata: Metadata = {
-  title: "フルート演奏会予約 - 吉原りえ",
-  description: "フルーティスト吉原りえの演奏会チケット予約システム",
+  title: "フルートライブ予約 - 吉原りえ",
+  description: "フルーティスト吉原りえのライブチケット予約システム",
 };
 
 export default function RootLayout({

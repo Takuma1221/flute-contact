@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
-// 演奏会情報を保存するJSONファイルのパス
+// ライブ情報を保存するJSONファイルのパス
 const LIVE_INFO_FILE = path.join(process.cwd(), "data", "live-info.json");
 
-// 演奏会情報の型定義
+// ライブ情報の型定義
 interface LiveInfo {
   liveDate: string;
   liveTime1: string;
@@ -21,7 +21,7 @@ interface LiveInfo {
   updatedAt: string;
 }
 
-// デフォルトの演奏会情報
+// デフォルトのライブ情報
 const defaultLiveInfo: LiveInfo = {
   liveDate: "2025年10月4日（土）",
   liveTime1: "14:00",
@@ -37,7 +37,7 @@ const defaultLiveInfo: LiveInfo = {
   updatedAt: new Date().toISOString(),
 };
 
-// 演奏会情報の読み込み
+// ライブ情報の読み込み
 async function loadLiveInfo(): Promise<LiveInfo> {
   try {
     const data = await fs.readFile(LIVE_INFO_FILE, "utf-8");
@@ -48,7 +48,7 @@ async function loadLiveInfo(): Promise<LiveInfo> {
   }
 }
 
-// GET: 公開用演奏会情報の取得
+// GET: 公開用ライブ情報の取得
 export async function GET() {
   try {
     const liveInfo = await loadLiveInfo();
@@ -70,7 +70,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error loading public live info:", error);
     return NextResponse.json(
-      { error: "演奏会情報の読み込みに失敗しました" },
+      { error: "ライブ情報の読み込みに失敗しました" },
       { status: 500 }
     );
   }

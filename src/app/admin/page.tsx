@@ -6,9 +6,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
 
-// 演奏会情報のスキーマ
+// ライブ情報のスキーマ
 const liveInfoSchema = z.object({
-  liveDate: z.string().min(1, "演奏会日程を入力してください"),
+  liveDate: z.string().min(1, "ライブ日程を入力してください"),
   liveTime1: z.string().min(1, "1回目の開演時間を入力してください"),
   liveTime2: z.string().optional(),
   venue: z.string().min(1, "会場情報を入力してください"),
@@ -42,7 +42,7 @@ export default function AdminPage() {
     resolver: zodResolver(loginSchema),
   });
 
-  // 演奏会情報フォーム
+  // ライブ情報フォーム
   const liveForm = useForm<LiveInfoData>({
     resolver: zodResolver(liveInfoSchema),
     defaultValues: {
@@ -106,7 +106,7 @@ export default function AdminPage() {
     }
   };
 
-  // 演奏会情報の読み込み
+  // ライブ情報の読み込み
   const loadLiveInfo = useCallback(async () => {
     try {
       // キャッシュを回避するためのタイムスタンプを追加
@@ -121,11 +121,11 @@ export default function AdminPage() {
         liveForm.reset(data);
       }
     } catch (error) {
-      console.error("演奏会情報の読み込みに失敗:", error);
+      console.error("ライブ情報の読み込みに失敗:", error);
     }
   }, [liveForm]);
 
-  // 演奏会情報の保存
+  // ライブ情報の保存
   const handleSaveLiveInfo = async (data: LiveInfoData) => {
     setIsLoading(true);
     console.log(
@@ -141,7 +141,7 @@ export default function AdminPage() {
 
       if (response.ok) {
         setMessage(
-          "演奏会情報を更新しました。変更をすぐに確認するには、メインページを更新してください。"
+          "ライブ情報を更新しました。変更をすぐに確認するには、メインページを更新してください。"
         );
         setLiveInfo(data);
         console.log("Live info saved successfully");
@@ -269,7 +269,7 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">演奏会情報管理</h1>
+          <h1 className="text-3xl font-bold text-gray-900">ライブ情報管理</h1>
           <button
             onClick={handleLogout}
             className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
@@ -287,7 +287,7 @@ export default function AdminPage() {
                   htmlFor="liveDate"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  演奏会日程 <span className="text-red-500">*</span>
+                  ライブ日程 <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -548,7 +548,7 @@ export default function AdminPage() {
                 disabled={isLoading}
                 className="bg-amber-600 text-white px-8 py-3 rounded-md hover:bg-amber-700 transition-colors disabled:opacity-50"
               >
-                {isLoading ? "保存中..." : "演奏会情報を更新"}
+                {isLoading ? "保存中..." : "ライブ情報を更新"}
               </button>
             </div>
 
@@ -568,7 +568,7 @@ export default function AdminPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
-                <strong>演奏会日程:</strong> {liveInfo.liveDate}
+                <strong>ライブ日程:</strong> {liveInfo.liveDate}
               </div>
               <div>
                 <strong>開演時間:</strong> {liveInfo.liveTime1}

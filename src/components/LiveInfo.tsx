@@ -79,7 +79,7 @@ export function LiveInfo() {
           Live Information
         </h2>
 
-        {/* 演奏会詳細 */}
+        {/* ライブ詳細 */}
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
           <h3 className="text-xl font-medium text-gray-900 mb-6 text-center">
             開催概要
