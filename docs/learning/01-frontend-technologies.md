@@ -21,12 +21,10 @@ Next.js は、React をベースにした**フルスタック Web アプリケ�
 ### 🎯 なぜ Next.js を選んだのか？
 
 1. **サーバーサイドレンダリング（SSR）**
-
    - SEO に優れている
    - ページの初期表示が高速
 
 2. **App Router（Next.js 13+）**
-
    - 直感的なファイルベースルーティング
    - サーバーコンポーネントとクライアントコンポーネントの使い分け
 
@@ -45,7 +43,7 @@ src/app/
     ├── reservation/
     │   └── route.ts     # 予約API
     └── live-info/
-        └── route.ts     # ライブ情報API
+        └── route.ts     # 演奏会情報API
 ```
 
 ### 🔧 主要な機能
@@ -105,12 +103,10 @@ TypeScript は、JavaScript に**型安全性**を追加したプログラミン
 ### 🎯 なぜ TypeScript を使うのか？
 
 1. **エラーの早期発見**
-
    - コンパイル時にエラーを検出
    - ランタイムエラーを減らせる
 
 2. **開発体験の向上**
-
    - 自動補完が充実
    - リファクタリングが安全
 
@@ -233,12 +229,10 @@ Tailwind CSS は、**ユーティリティファースト**の CSS フレーム�
 ### 🎯 なぜ Tailwind CSS を選んだのか？
 
 1. **高速な開発**
-
    - HTML から離れずにスタイリング
    - 事前定義されたクラスで一貫性
 
 2. **レスポンシブデザイン**
-
    - ブレークポイントが簡単
    - モバイルファースト
 
@@ -377,17 +371,15 @@ Tailwind CSS は、**ユーティリティファースト**の CSS フレーム�
 
 ### 🤔 React Hook Form とは？
 
-React Hook Form は、**パフォーマンスと使いやすさ**を重視した React フォームライブラリです。
+React Hook Form は、**パフォーマンスと使いやすさ**を重視した React フォーム演奏会ラリです。
 
 ### 🎯 なぜ React Hook Form を選んだのか？
 
 1. **高パフォーマンス**
-
    - 再レンダリングの最小化
    - 非制御コンポーネントの使用
 
 2. **簡単なバリデーション**
-
    - 組み込みバリデーション
    - 外部スキーマ（Yup、Zod）との統合
 
@@ -559,17 +551,15 @@ const totalAmount = ticketTotal + deliveryFee;
 
 ### 🤔 Zod とは？
 
-Zod は、**TypeScript-first**なスキーマ検証ライブラリです。
+Zod は、**TypeScript-first**なスキーマ検証演奏会ラリです。
 
 ### 🎯 なぜ Zod を使うのか？
 
 1. **型安全性**
-
    - スキーマから自動で型を生成
    - ランタイムとコンパイル時の両方で型安全
 
 2. **直感的な API**
-
    - チェーン可能なメソッド
    - 豊富なバリデーション機能
 
@@ -691,7 +681,7 @@ const reservationSchema = z
     nameKana: z.string().min(1, "ふりがなを入力してください"),
     email: z.string().email("正しいメールアドレスを入力してください"),
     phone: z.string().min(10, "電話番号を入力してください"),
-    liveDate: z.string().min(1, "ライブ日程を選択してください"),
+    liveDate: z.string().min(1, "演奏会日程を選択してください"),
     generalTickets: z
       .number()
       .min(0, "0枚以上を選択してください")
