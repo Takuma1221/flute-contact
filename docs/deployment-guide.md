@@ -5,7 +5,7 @@
 ```bash
 # プロジェクトをGitで管理
 git add .
-git commit -m "Initial commit: フルートライブ予約LP"
+git commit -m "Initial commit: フルート演奏会予約LP"
 
 # GitHubリポジトリを作成して push
 git remote add origin https://github.com/Takuma1221/flute-contact.git
@@ -54,7 +54,7 @@ NEXT_PUBLIC_SITE_URL=https://your-domain.vercel.app
 
 - [ ] 管理画面 (/admin) にアクセスできる
 - [ ] 管理画面認証が正常に動作する
-- [ ] ライブ情報の更新が反映される
+- [ ] 演奏会情報の更新が反映される
 - [ ] パンフレット画像のアップロードが動作する
 - [ ] キャンセルポリシーの変更が反映される
 - [ ] ステータスAPI (/api/admin/status) が正常応答する
