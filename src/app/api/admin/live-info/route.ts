@@ -1,121 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
-
-// ライブ情報の型定義
-interface LiveInfo {
-  liveDate: string;
-  liveTime1: string;
-  liveTime2?: string;
-  venue: string;
-  venueAddress?: string;
-  generalPrice: number;
-  studentPrice: number;
-  deliveryFee: number;
-  maxTickets: number;
-  notes?: string;
-  programImageUrl?: string;
-  cancelPolicy?: string;
-  cancelDeadlineDays?: number;
-  updatedAt: string;
-}
-
-// ライブ情報を保存するJSONファイルのパス
-const LIVE_INFO_FILE = path.join(process.cwd(), "data", "live-info.json");
-
-// デフォルトのライブ情報
-const defaultLiveInfo: LiveInfo = {
-  liveDate: "2025年10月4日（土）",
-  liveTime1: "14:00",
-  liveTime2: "",
-  venue: "詳細は予約後にご案内いたします",
-  venueAddress: "",
-  generalPrice: 4000,
-  studentPrice: 3000,
-  deliveryFee: 200,
-  maxTickets: 10,
-  notes: "",
-  programImageUrl: "/images/concert-program.png",
-  cancelPolicy:
-    "お客様都合によるお申込み後のキャンセルおよび返金はお受けしておりません。予めご了承ください。\nなお、当日現金払いを選択されたお客様でご来場いただけなかった場合には、お手数ですが お振込み下さいますようお願いいたします。",
-  cancelDeadlineDays: 0,
-  updatedAt: new Date().toISOString(),
-};
-
-// ファイルから現在のライブ情報を読み込む
-async function loadLiveInfo(): Promise<LiveInfo> {
-  try {
-    const data = await fs.readFile(LIVE_INFO_FILE, "utf-8");
-    const parsedData = JSON.parse(data);
-    console.log("[Admin API] Loaded live info:", {
-      programImageUrl: parsedData.programImageUrl
-        ? `${parsedData.programImageUrl.substring(0, 50)}...`
-        : "none",
-      liveDate: parsedData.liveDate,
-    });
-    return parsedData;
-  } catch (error) {
-    console.log(
-      "[Admin API] Loading failed, using default:",
-      error instanceof Error ? error.message : "Unknown error"
-    );
-    // ファイルが存在しない場合はデフォルト値を返す
-    return defaultLiveInfo;
-  }
-}
-
-// ライブ情報をファイルに保存する
-async function saveLiveInfo(liveInfo: LiveInfo): Promise<void> {
-  // タイムスタンプを追加してキャッシュ無効化
-  const dataWithTimestamp = {
-    ...liveInfo,
-    lastUpdated: new Date().toISOString(),
-  };
-
-  console.log("[Admin API] Saving live info:", {
-    programImageUrl: dataWithTimestamp.programImageUrl
-      ? `${dataWithTimestamp.programImageUrl.substring(0, 50)}...`
-      : "none",
-    liveDate: dataWithTimestamp.liveDate,
-    lastUpdated: dataWithTimestamp.lastUpdated,
-    isProduction: process.env.NODE_ENV === "production",
-  });
-
-  try {
-    // 本番環境では読み取り専用のため、一時的にメモリにのみ保存
-    if (process.env.NODE_ENV === "production") {
-      console.log(
-        "[Admin API] Production environment detected - file write skipped"
-      );
-      console.log(
-        "[Admin API] In production, data changes require code deployment"
-      );
-      // 本番環境では、データの永続化は code deployment を通じて行う
-      return;
-    }
-
-    // 開発環境でのみファイル書き込み
-    await fs.writeFile(
-      LIVE_INFO_FILE,
-      JSON.stringify(dataWithTimestamp, null, 2)
-    );
-    console.log("[Admin API] File saved successfully in development");
-  } catch (error) {
-    console.error("[Admin API] Error saving file:", error);
-    if (process.env.NODE_ENV === "production") {
-      console.log(
-        "[Admin API] File write failed in production (expected - read-only filesystem)"
-      );
-    } else {
-      throw error; // 開発環境では再スロー
-    }
-  }
-}
+import {
+  LiveInfo,
+  getLiveInfoFromSheet,
+  saveLiveInfoToSheet,
+} from "@/lib/google-sheets";
 
 // GET: ライブ情報の取得
 export async function GET() {
   try {
-    const liveInfo = await loadLiveInfo();
+    const liveInfo = await getLiveInfoFromSheet();
     return NextResponse.json(liveInfo);
   } catch (error) {
     console.error("Error loading live info:", error);
@@ -196,14 +89,19 @@ export async function POST(request: NextRequest) {
       maxTickets: body.maxTickets,
       notes: body.notes || undefined,
       programImageUrl: body.programImageUrl || undefined,
-      // キャンセルポリシーは常にデフォルト値を使用
+      // キャンセルポリシーは常にデフォルト値を使用（またはシートから取得した値を保持すべきだが、ここでは簡易的に固定テキストまたは入力値があればそれを使うなどを検討）
+      // 現状の実装通り、特定テキストで固定
       cancelPolicy:
         "お客様都合によるお申込み後のキャンセルおよび返金はお受けしておりません。予めご了承ください。\nなお、当日現金払いを選択されたお客様でご来場いただけなかった場合には、お手数ですが お振込み下さいますようお願いいたします。",
       cancelDeadlineDays: 0,
       updatedAt: new Date().toISOString(),
     };
 
-    await saveLiveInfo(liveInfo);
+    const success = await saveLiveInfoToSheet(liveInfo);
+
+    if (!success) {
+      throw new Error("Google Sheetsへの保存に失敗しました");
+    }
 
     return NextResponse.json({
       message: "ライブ情報を更新しました",

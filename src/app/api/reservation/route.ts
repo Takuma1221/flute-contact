@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
-import { Resend } from "resend";
+import { sendMail } from "@/lib/mail";
+import { getLiveInfoFromSheet } from "@/lib/google-sheets";
 
 // 型定義
 interface ReservationData {
@@ -19,11 +20,7 @@ interface ReservationData {
   agreePrivacy: boolean;
 }
 
-// Resendクライアント初期化（環境変数チェック付き）
-console.log("RESEND_API_KEY exists:", !!process.env.RESEND_API_KEY);
-const resend = process.env.RESEND_API_KEY
-  ? new Resend(process.env.RESEND_API_KEY)
-  : null;
+
 
 // Google Sheets認証
 async function getGoogleSheetsClient() {
@@ -42,29 +39,7 @@ async function getGoogleSheetsClient() {
   return google.sheets({ version: "v4", auth });
 }
 
-// ライブ情報を取得する関数
-async function loadLiveInfo() {
-  try {
-    const fs = await import("fs/promises");
-    const path = await import("path");
-    const liveInfoFile = path.join(process.cwd(), "data", "live-info.json");
-    const data = await fs.readFile(liveInfoFile, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    // デフォルト値を返す
-    return {
-      liveDate: "2025年10月4日（土）",
-      liveTime1: "14:00",
-      liveTime2: "18:00",
-      venue: "詳細は予約後にご案内いたします",
-      venueAddress: "",
-      generalPrice: 4000,
-      studentPrice: 3000,
-      deliveryFee: 200,
-      maxTickets: 10,
-    };
-  }
-}
+
 
 // チケット価格
 const TICKET_PRICES = {
@@ -251,13 +226,10 @@ async function sendConfirmationEmail(data: ReservationData) {
     console.log("Starting email send process...");
     console.log("Email recipient:", data.email);
 
-    if (!resend) {
-      console.error("Resend client not initialized - API key missing");
-      return false;
-    }
+
 
     // 管理画面のライブ情報を取得
-    const liveInfo = await loadLiveInfo();
+    const liveInfo = await getLiveInfoFromSheet();
     console.log("Loaded live info for email:", liveInfo);
 
     const total = calculateTotal(
@@ -342,7 +314,7 @@ PayPay ID: fueneko5656
 
 ■お問い合わせ
 吉原りえ
-メール: takumakawauso4649@gmail.com
+メール: fueneko5656@gmail.com
 Instagram: @fueneko_rie
 
 素敵な音楽の時間をお楽しみに！
@@ -350,17 +322,28 @@ Instagram: @fueneko_rie
 
     console.log("Sending email to:", data.email);
 
-    const emailResult = await resend.emails.send({
-      from: "onboarding@resend.dev", // Resendのテスト用ドメイン
+
+
+
+
+    // 送信元アドレス（Gmailアカウントと同一か、エイリアス設定が必要）
+    const fromEmail = process.env.EMAIL_FROM || process.env.GMAIL_USER;
+    
+    console.log("Sending email using Gmail SMTP to:", data.email);
+
+    const emailSent = await sendMail({
       to: data.email,
-      subject:
-        "【フルートライブ】チケットご予約ありがとうございます - 吉原りえ",
+      subject: "【フルートライブ】チケットご予約ありがとうございます - 吉原りえ",
       text: emailContent,
     });
 
-    console.log("Email sent successfully:", emailResult);
-
-    return true;
+    if (emailSent) {
+      console.log("Confirmation email sent successfully via Gmail");
+      return true;
+    } else {
+      console.error("Failed to send confirmation email via Gmail");
+      return false;
+    }
   } catch (error) {
     console.error("Error sending email:", error);
     return false;

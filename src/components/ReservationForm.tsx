@@ -532,7 +532,15 @@ export function ReservationForm() {
                 />
                 <label htmlFor="agreePrivacy" className="text-sm text-gray-700">
                   <span className="text-red-500">*</span>{" "}
-                  個人情報の取り扱いに同意します
+                  <a
+                    href="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-600 hover:text-amber-700 underline"
+                  >
+                    プライバシーポリシー
+                  </a>
+                  に同意します
                   <div className="text-xs text-gray-500 mt-1">
                     お預かりした個人情報は、本ライブに関する連絡・案内のみに使用いたします。
                   </div>
