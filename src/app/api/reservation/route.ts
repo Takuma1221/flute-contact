@@ -40,7 +40,6 @@ async function getGoogleSheetsClient() {
 }
 
 
-
 // チケット価格
 const TICKET_PRICES = {
   general: 4000,
@@ -228,6 +227,7 @@ async function sendConfirmationEmail(data: ReservationData) {
 
 
 
+
     // 管理画面のライブ情報を取得
     const liveInfo = await getLiveInfoFromSheet();
     console.log("Loaded live info for email:", liveInfo);
@@ -272,7 +272,7 @@ PayPay ID: fueneko5656
       case "cash":
         paymentInstructions = `
 【現金の場合】
-ライブ当日に受付でお支払いください
+演奏会当日に受付でお支払いください
 ※お釣りのないようご準備をお願いします`;
         break;
     }
@@ -284,12 +284,12 @@ PayPay ID: fueneko5656
 
     const emailContent = `${data.name}様
 
-この度は、吉原りえフルートライブにお申し込みいただき、誠にありがとうございます。
+この度は、吉原りえフルート演奏会にお申し込みいただき、誠にありがとうございます。
 以下の内容でご予約を承りました。
 
 ■ご予約内容
 ・お名前: ${data.name}
-・ライブ日程: ${liveDateDisplay}
+・演奏会日程: ${liveDateDisplay}
 ・チケット詳細: 一般 ${data.generalTickets}枚、学生 ${data.studentTickets}枚
 ・受取方法: ${deliveryMethodName}
 ・合計金額: ¥${total.toLocaleString()}
@@ -333,7 +333,7 @@ Instagram: @fueneko_rie
 
     const emailSent = await sendMail({
       to: data.email,
-      subject: "【フルートライブ】チケットご予約ありがとうございます - 吉原りえ",
+      subject: "【フルート演奏会】チケットご予約ありがとうございます - 吉原りえ",
       text: emailContent,
     });
 
